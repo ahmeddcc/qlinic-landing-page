@@ -31,27 +31,51 @@ export const appRouter = router({
       )
       .mutation(async ({ input }) => {
         try {
+          const botToken = process.env.TELEGRAM_BOT_TOKEN;
+          const chatId = process.env.TELEGRAM_CHAT_ID;
+
+          if (!botToken || !chatId) {
+            console.error("[Booking] Missing Telegram credentials");
+            return {
+              success: false,
+              message: input.language === "ar"
+                ? "حدث خطأ في الإعدادات. يرجى المحاولة لاحقاً."
+                : "Configuration error. Please try again later.",
+            };
+          }
+
           const message =
             input.language === "ar"
-              ? `مرحباً، أود حجز عرض توضيحي لـ QLINIC SYSTEM\n\nالاسم: ${input.name}\nالبريد الإلكتروني: ${input.email}\nرقم الهاتف: ${input.phone}\nالتاريخ المفضل: ${input.date}\nالوقت المفضل: ${input.time}`
-              : `Hello, I would like to book a demo for QLINIC SYSTEM\n\nName: ${input.name}\nEmail: ${input.email}\nPhone: ${input.phone}\nPreferred Date: ${input.date}\nPreferred Time: ${input.time}`;
+              ? `🎯 *طلب حجز عرض توضيحي جديد*\n\n📝 *الاسم:* ${input.name}\n📧 *البريد:* ${input.email}\n📱 *الهاتف:* ${input.phone}\n📅 *التاريخ:* ${input.date}\n⏰ *الوقت:* ${input.time}`
+              : `🎯 *New Demo Booking Request*\n\n📝 *Name:* ${input.name}\n📧 *Email:* ${input.email}\n📱 *Phone:* ${input.phone}\n📅 *Date:* ${input.date}\n⏰ *Time:* ${input.time}`;
 
-          const whatsappNumber = "201014093162";
+          // Send message via Telegram Bot API
+          const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
           
-          // Send message via wa.me API silently (no page redirect)
-          const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-          
-          // Make a silent request to trigger WhatsApp (this won't open a page for the user)
-          fetch(whatsappUrl, {
-            method: "GET",
+          const response = await fetch(telegramUrl, {
+            method: "POST",
             headers: {
-              "User-Agent": "Mozilla/5.0",
+              "Content-Type": "application/json",
             },
-          }).catch(() => {
-            // Silent fail - we don't care about the response
+            body: JSON.stringify({
+              chat_id: chatId,
+              text: message,
+              parse_mode: "Markdown",
+            }),
           });
 
-          // Return success immediately without waiting for the fetch
+          const result = await response.json();
+
+          if (!response.ok || !result.ok) {
+            console.error("[Booking] Telegram API error:", result);
+            return {
+              success: false,
+              message: input.language === "ar"
+                ? "حدث خطأ في إرسال الرسالة. يرجى المحاولة لاحقاً."
+                : "Failed to send message. Please try again.",
+            };
+          }
+
           return {
             success: true,
             message: input.language === "ar" 

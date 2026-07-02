@@ -764,8 +764,8 @@ export default function Home() {
 
       {/* Booking Modal */}
       {isBookingModalOpen && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-8 space-y-6">
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl max-w-md w-full p-8 space-y-6 shadow-2xl border border-[#E2E8F0] animate-in fade-in zoom-in-95 duration-200">
             {bookingSuccess ? (
               <div className="text-center py-8">
                 <div className="mb-4 flex justify-center">
@@ -784,7 +784,7 @@ export default function Home() {
               </div>
             ) : (
               <>
-                <div>
+                <div className="mb-2">
                   <h3 className="text-2xl font-black text-[#1E3A5F]">
                     {content.booking_modal_title}
                   </h3>
@@ -793,7 +793,7 @@ export default function Home() {
                   </p>
                 </div>
 
-                <form onSubmit={handleBookingSubmit} className="space-y-4">
+                <form onSubmit={handleBookingSubmit} className="space-y-5">
               <div>
                 <label className="block text-sm font-bold text-[#1E3A5F] mb-2">
                   {content.booking_form_name}
@@ -850,16 +850,25 @@ export default function Home() {
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-[#1E3A5F] mb-2">
+                <label className="block text-sm font-bold text-[#1E3A5F] mb-3">
                   {content.booking_form_time}
                 </label>
-                <input
-                  type="time"
-                  required
-                  value={bookingData.time}
-                  onChange={(e) => setBookingData({ ...bookingData, time: e.target.value })}
-                  className="w-full px-4 py-3 border border-[#E2E8F0] rounded-lg focus:outline-none focus:border-[#10B981]"
-                />
+                <div className="grid grid-cols-3 gap-2">
+                  {['09:00', '10:00', '11:00', '14:00', '15:00', '16:00'].map((time) => (
+                    <button
+                      key={time}
+                      type="button"
+                      onClick={() => setBookingData({ ...bookingData, time })}
+                      className={`px-3 py-2 rounded-lg font-semibold text-sm transition-all ${
+                        bookingData.time === time
+                          ? 'bg-[#10B981] text-white shadow-lg'
+                          : 'bg-[#F0F4F8] text-[#1E3A5F] border border-[#E2E8F0] hover:border-[#10B981]'
+                      }`}
+                    >
+                      {time}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               <div className="flex gap-3 pt-4">
