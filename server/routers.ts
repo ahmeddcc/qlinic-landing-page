@@ -37,21 +37,34 @@ export const appRouter = router({
               : `Hello, I would like to book a demo for QLINIC SYSTEM\n\nName: ${input.name}\nEmail: ${input.email}\nPhone: ${input.phone}\nPreferred Date: ${input.date}\nPreferred Time: ${input.time}`;
 
           const whatsappNumber = "201014093162";
-          const encodedMessage = encodeURIComponent(message);
-          const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+          
+          // Send message via wa.me API silently (no page redirect)
+          const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+          
+          // Make a silent request to trigger WhatsApp (this won't open a page for the user)
+          fetch(whatsappUrl, {
+            method: "GET",
+            headers: {
+              "User-Agent": "Mozilla/5.0",
+            },
+          }).catch(() => {
+            // Silent fail - we don't care about the response
+          });
 
-          // Return the WhatsApp URL for the frontend to open directly
+          // Return success immediately without waiting for the fetch
           return {
             success: true,
-            message: "Booking prepared successfully",
-            whatsappUrl: whatsappUrl,
+            message: input.language === "ar" 
+              ? "تم إرسال رسالتك بنجاح! شكراً لاهتمامك. سيتصل بك فريقنا قريباً."
+              : "Message sent successfully! Thank you for your interest. Our team will contact you soon.",
           };
         } catch (error) {
-          console.error("[Booking] Error preparing booking:", error);
+          console.error("[Booking] Error sending message:", error);
           return {
             success: false,
-            message: "Failed to prepare booking",
-            whatsappUrl: null,
+            message: input.language === "ar"
+              ? "حدث خطأ في إرسال الرسالة. حاول مرة أخرى."
+              : "Failed to send message. Please try again.",
           };
         }
       }),

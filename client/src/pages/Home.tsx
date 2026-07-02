@@ -26,7 +26,7 @@ const CONTENT = {
     nav_lang_toggle: "EN",
 
     // Hero
-    hero_title: "عيادتك بلا فوضى — بلا ورق — بلا فوضى مالية",
+    hero_title: "عيادتك بلا فوضى — بلا أوراق — بلا فوضى مالية",
     hero_subtitle:
       "QLINIC SYSTEM نظام إدارة عيادة الأسنان الفردية الذي يتولى المهام المتكررة عنك — ويُبقيك دائماً في السيطرة الكاملة.",
     hero_btn_features: "شاهد المميزات",
@@ -399,11 +399,7 @@ export default function Home() {
         language: currentLang,
       });
       
-      // Open WhatsApp directly with the message
-      if (result.whatsappUrl) {
-        window.open(result.whatsappUrl, '_blank');
-      }
-      
+      // Message sent silently from backend
       setBookingSuccess(true);
       setBookingData({ name: "", email: "", phone: "", date: "", time: "" });
       
