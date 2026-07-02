@@ -385,7 +385,7 @@ export default function Home() {
       : `Hello, I would like to book a demo for QLINIC SYSTEM\n\nName: ${bookingData.name}\nEmail: ${bookingData.email}\nPhone: ${bookingData.phone}\nPreferred Date: ${bookingData.date}\nPreferred Time: ${bookingData.time}`;
     
     const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-    fetch(whatsappUrl, { method: 'GET' }).catch(() => {});
+    window.open(whatsappUrl, '_blank');
     
     setBookingSuccess(true);
     setBookingData({ name: "", email: "", phone: "", date: "", time: "" });
