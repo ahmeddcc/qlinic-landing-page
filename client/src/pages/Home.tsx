@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Menu, X, MessageCircle, ChevronDown } from "lucide-react";
 
 const CONTENT = {
   ar: {
@@ -161,7 +162,7 @@ const CONTENT = {
     final_cta_btn: "تواصل معنا الآن ←",
 
     // Footer
-    footer_copyright: "© 2024 QLINIC SYSTEM. جميع الحقوق محفوظة.",
+    footer_copyright: "© 2024 QLINIC SYSTEM - احدى تطبيقات Noor App. جميع الحقوق محفوظة.",
   },
   en: {
     // Navigation
@@ -323,14 +324,18 @@ const CONTENT = {
     final_cta_btn: "Get in Touch →",
 
     // Footer
-    footer_copyright: "© 2024 QLINIC SYSTEM. All rights reserved.",
+    footer_copyright: "© 2024 QLINIC SYSTEM - A Noor App Application. All rights reserved.",
   },
 };
+
+const WHATSAPP_NUMBER = "201014093162";
+const WHATSAPP_MESSAGE = "مرحباً، أود معرفة المزيد عن QLINIC SYSTEM";
 
 export default function Home() {
   const [currentLang, setCurrentLang] = useState<"ar" | "en">("ar");
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
   const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const content = CONTENT[currentLang];
 
@@ -347,6 +352,7 @@ export default function Home() {
     setCurrentLang(newLang);
     document.documentElement.dir = newLang === "ar" ? "rtl" : "ltr";
     document.documentElement.lang = newLang;
+    setMobileMenuOpen(false);
   };
 
   const scrollToSection = (sectionId: string) => {
@@ -354,6 +360,13 @@ export default function Home() {
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
+    setMobileMenuOpen(false);
+  };
+
+  const openWhatsApp = () => {
+    const message = currentLang === "ar" ? WHATSAPP_MESSAGE : "Hi, I'd like to know more about QLINIC SYSTEM";
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+    window.open(url, "_blank");
   };
 
   return (
@@ -362,18 +375,18 @@ export default function Home() {
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
-            ? "bg-white shadow-lg"
-            : "bg-white/95 backdrop-blur-sm"
+            ? "bg-white shadow-xl"
+            : "bg-white/95 backdrop-blur-md"
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <div className="flex items-center gap-2">
-              <div className="w-10 h-10 bg-[#1E3A5F] rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">Q</span>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <div className="w-10 h-10 bg-gradient-to-br from-[#1E3A5F] to-[#0F1F3C] rounded-xl flex items-center justify-center shadow-lg">
+                <span className="text-white font-black text-lg">Q</span>
               </div>
-              <span className="font-bold text-[#1E3A5F] hidden sm:inline">
+              <span className="font-bold text-[#1E3A5F] hidden sm:inline text-sm">
                 {content.nav_logo}
               </span>
             </div>
@@ -398,15 +411,9 @@ export default function Home() {
               >
                 {content.nav_faq}
               </button>
-              <button
-                onClick={() => scrollToSection("contact")}
-                className="text-[#64748B] hover:text-[#1E3A5F] transition-colors font-medium text-sm"
-              >
-                {content.nav_contact}
-              </button>
             </div>
 
-            {/* Right side - Language toggle and CTA */}
+            {/* Right side - Language toggle, WhatsApp and CTA */}
             <div className="flex items-center gap-3">
               <button
                 onClick={toggleLang}
@@ -414,67 +421,118 @@ export default function Home() {
               >
                 {content.nav_lang_toggle}
               </button>
-              <button className="px-4 py-2 bg-[#10B981] text-white rounded-lg text-sm font-semibold hover:bg-[#059669] transition-colors hidden sm:inline-block">
+              <button
+                onClick={openWhatsApp}
+                className="hidden sm:flex items-center gap-2 px-4 py-2 bg-[#25D366] text-white rounded-lg text-sm font-semibold hover:bg-[#1DA851] transition-colors shadow-lg"
+              >
+                <MessageCircle size={16} />
+                <span className="hidden sm:inline">WhatsApp</span>
+              </button>
+              <button className="px-4 py-2 bg-[#1E3A5F] text-white rounded-lg text-sm font-semibold hover:bg-[#152847] transition-colors hidden sm:inline-block shadow-lg">
                 {content.nav_cta}
+              </button>
+              
+              {/* Mobile menu button */}
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="md:hidden p-2 text-[#1E3A5F]"
+              >
+                {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
             </div>
           </div>
+
+          {/* Mobile Menu */}
+          {mobileMenuOpen && (
+            <div className="md:hidden pb-4 border-t border-[#E2E8F0]">
+              <button
+                onClick={() => scrollToSection("features")}
+                className="block w-full text-left px-4 py-2 text-[#64748B] hover:text-[#1E3A5F] transition-colors font-medium text-sm"
+              >
+                {content.nav_features}
+              </button>
+              <button
+                onClick={() => scrollToSection("why")}
+                className="block w-full text-left px-4 py-2 text-[#64748B] hover:text-[#1E3A5F] transition-colors font-medium text-sm"
+              >
+                {content.nav_why}
+              </button>
+              <button
+                onClick={() => scrollToSection("faq")}
+                className="block w-full text-left px-4 py-2 text-[#64748B] hover:text-[#1E3A5F] transition-colors font-medium text-sm"
+              >
+                {content.nav_faq}
+              </button>
+              <button
+                onClick={openWhatsApp}
+                className="block w-full mt-2 px-4 py-2 bg-[#25D366] text-white rounded-lg text-sm font-semibold hover:bg-[#1DA851] transition-colors"
+              >
+                {content.nav_contact}
+              </button>
+            </div>
+          )}
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-white via-white to-[#F8FAFC]">
+      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-[#F8FAFC] via-white to-[#F0F4F8]">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             {/* Left Content */}
-            <div className="space-y-6">
-              <h1 className="text-4xl sm:text-5xl font-bold text-[#1E3A5F] leading-tight">
+            <div className="space-y-6 order-2 md:order-1">
+              <div className="inline-block">
+                <span className="px-4 py-2 bg-[#10B981]/10 text-[#10B981] rounded-full text-sm font-semibold">
+                  ✨ الحل الكامل لعيادتك
+                </span>
+              </div>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-[#1E3A5F] leading-tight">
                 {content.hero_title}
               </h1>
-              <p className="text-lg text-[#64748B] leading-relaxed">
+              <p className="text-lg text-[#64748B] leading-relaxed max-w-xl">
                 {content.hero_subtitle}
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <div className="flex flex-col sm:flex-row gap-4 pt-6">
                 <button
                   onClick={() => scrollToSection("features")}
-                  className="px-6 py-3 bg-[#1E3A5F] text-white rounded-lg font-semibold hover:bg-[#152847] transition-colors"
+                  className="px-6 py-3 bg-gradient-to-r from-[#1E3A5F] to-[#0F1F3C] text-white rounded-lg font-bold hover:shadow-xl transition-all transform hover:scale-105"
                 >
                   {content.hero_btn_features}
                 </button>
                 <button
-                  onClick={() => scrollToSection("contact")}
-                  className="px-6 py-3 border-2 border-[#1E3A5F] text-[#1E3A5F] rounded-lg font-semibold hover:bg-[#F8FAFC] transition-colors"
+                  onClick={openWhatsApp}
+                  className="px-6 py-3 border-2 border-[#25D366] text-[#25D366] rounded-lg font-bold hover:bg-[#25D366]/10 transition-colors flex items-center justify-center gap-2"
                 >
+                  <MessageCircle size={18} />
                   {content.hero_btn_contact}
                 </button>
               </div>
             </div>
 
             {/* Right - Floating Cards */}
-            <div className="relative h-96 hidden md:block">
+            <div className="relative h-96 hidden md:block order-1 md:order-2">
               {/* Card 1 */}
-              <div className="absolute top-0 left-0 w-64 bg-white rounded-xl shadow-lg p-6 border border-[#E2E8F0] animate-float"
+              <div className="absolute top-0 left-0 w-72 bg-white rounded-2xl shadow-2xl p-6 border border-[#E2E8F0] animate-float backdrop-blur-sm"
                 style={{ animationDelay: "0s" }}>
-                <div className="text-sm text-[#64748B]">{content.hero_card_1_title}</div>
-                <div className="text-2xl font-bold text-[#1E3A5F] mt-2">
+                <div className="text-sm text-[#64748B] font-medium">{content.hero_card_1_title}</div>
+                <div className="text-3xl font-black text-[#1E3A5F] mt-3">
                   {content.hero_card_1_value}
                 </div>
               </div>
 
               {/* Card 2 */}
-              <div className="absolute top-32 left-20 w-64 bg-white rounded-xl shadow-lg p-6 border border-[#E2E8F0] animate-float"
+              <div className="absolute top-32 left-20 w-72 bg-white rounded-2xl shadow-2xl p-6 border border-[#E2E8F0] animate-float backdrop-blur-sm"
                 style={{ animationDelay: "0.5s" }}>
-                <div className="text-sm text-[#64748B]">{content.hero_card_2_title}</div>
-                <div className="text-2xl font-bold text-[#10B981] mt-2">
+                <div className="text-sm text-[#64748B] font-medium">{content.hero_card_2_title}</div>
+                <div className="text-3xl font-black text-[#10B981] mt-3">
                   {content.hero_card_2_value}
                 </div>
               </div>
 
               {/* Card 3 */}
-              <div className="absolute top-64 left-0 w-64 bg-white rounded-xl shadow-lg p-6 border border-[#E2E8F0] animate-float"
+              <div className="absolute top-64 left-0 w-72 bg-white rounded-2xl shadow-2xl p-6 border border-[#E2E8F0] animate-float backdrop-blur-sm"
                 style={{ animationDelay: "1s" }}>
-                <div className="text-sm text-[#64748B]">{content.hero_card_3_title}</div>
-                <div className="text-2xl font-bold text-[#10B981] mt-2">
+                <div className="text-sm text-[#64748B] font-medium">{content.hero_card_3_title}</div>
+                <div className="text-3xl font-black text-[#10B981] mt-3">
                   {content.hero_card_3_value}
                 </div>
               </div>
@@ -484,9 +542,9 @@ export default function Home() {
       </section>
 
       {/* Problem Solution Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-[#1E3A5F] text-white">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-[#1E3A5F] to-[#0F1F3C] text-white">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-bold text-center mb-16">
+          <h2 className="text-3xl sm:text-4xl font-black text-center mb-16">
             {content.problem_solution_title}
           </h2>
 
@@ -494,20 +552,20 @@ export default function Home() {
             {content.problems.map((item, idx) => (
               <div
                 key={idx}
-                className={`grid md:grid-cols-2 gap-8 p-6 rounded-lg transition-colors ${
+                className={`grid md:grid-cols-2 gap-8 p-8 rounded-2xl transition-all hover:shadow-xl ${
                   idx % 2 === 0 ? "bg-[#2A4A7C]" : "bg-[#253D6B]"
                 }`}
               >
                 <div className="flex gap-4">
-                  <div className="text-2xl flex-shrink-0">✕</div>
+                  <div className="text-3xl flex-shrink-0 font-black">✕</div>
                   <div>
-                    <p className="font-semibold">{item.problem}</p>
+                    <p className="font-bold text-lg">{item.problem}</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
-                  <div className="text-2xl flex-shrink-0">✓</div>
+                  <div className="text-3xl flex-shrink-0 font-black">✓</div>
                   <div>
-                    <p className="font-semibold text-[#10B981]">{item.solution}</p>
+                    <p className="font-bold text-lg text-[#10B981]">{item.solution}</p>
                   </div>
                 </div>
               </div>
@@ -520,7 +578,7 @@ export default function Home() {
       <section id="features" className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-[#1E3A5F] mb-4">
+            <h2 className="text-3xl sm:text-4xl font-black text-[#1E3A5F] mb-4">
               {content.features_title}
             </h2>
             <p className="text-lg text-[#64748B]">{content.features_subtitle}</p>
@@ -530,12 +588,12 @@ export default function Home() {
             {content.features.map((feature, idx) => (
               <div
                 key={idx}
-                className="p-6 border border-[#E2E8F0] rounded-lg hover:shadow-lg transition-shadow bg-[#F8FAFC]"
+                className="p-8 border-2 border-[#E2E8F0] rounded-2xl hover:shadow-2xl hover:border-[#10B981] transition-all bg-gradient-to-br from-[#F8FAFC] to-white group"
               >
-                <div className="w-12 h-12 bg-[#10B981] rounded-lg flex items-center justify-center mb-4">
-                  <span className="text-white font-bold">{idx + 1}</span>
+                <div className="w-14 h-14 bg-gradient-to-br from-[#10B981] to-[#059669] rounded-xl flex items-center justify-center mb-4 group-hover:shadow-lg transition-shadow">
+                  <span className="text-white font-black text-lg">{idx + 1}</span>
                 </div>
-                <h3 className="text-lg font-semibold text-[#1E3A5F] mb-3">
+                <h3 className="text-lg font-bold text-[#1E3A5F] mb-3">
                   {feature.title}
                 </h3>
                 <p className="text-[#64748B] leading-relaxed">{feature.description}</p>
@@ -546,9 +604,9 @@ export default function Home() {
       </section>
 
       {/* Why QLINIC Section */}
-      <section id="why" className="py-20 px-4 sm:px-6 lg:px-8 bg-[#F8FAFC]">
+      <section id="why" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#F8FAFC] to-white">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-bold text-[#1E3A5F] text-center mb-16">
+          <h2 className="text-3xl sm:text-4xl font-black text-[#1E3A5F] text-center mb-16">
             {content.why_title}
           </h2>
 
@@ -556,12 +614,19 @@ export default function Home() {
             {content.why_cards.map((card, idx) => (
               <div
                 key={idx}
-                className="p-8 bg-white rounded-lg border-l-4 border-[#10B981] shadow-md hover:shadow-lg transition-shadow"
+                className="p-8 bg-white rounded-2xl border-l-4 border-[#10B981] shadow-lg hover:shadow-2xl transition-all group"
               >
-                <h3 className="text-xl font-bold text-[#1E3A5F] mb-3">
-                  {card.title}
-                </h3>
-                <p className="text-[#64748B] leading-relaxed">{card.description}</p>
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-[#10B981]/20 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-[#10B981]/30 transition-colors">
+                    <span className="text-[#10B981] font-black">✓</span>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-[#1E3A5F] mb-2">
+                      {card.title}
+                    </h3>
+                    <p className="text-[#64748B] leading-relaxed">{card.description}</p>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
@@ -571,7 +636,7 @@ export default function Home() {
       {/* FAQ Section */}
       <section id="faq" className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-bold text-[#1E3A5F] text-center mb-16">
+          <h2 className="text-3xl sm:text-4xl font-black text-[#1E3A5F] text-center mb-16">
             {content.faq_title}
           </h2>
 
@@ -579,23 +644,22 @@ export default function Home() {
             {content.faqs.map((faq, idx) => (
               <div
                 key={idx}
-                className="border border-[#E2E8F0] rounded-lg overflow-hidden"
+                className="border-2 border-[#E2E8F0] rounded-xl overflow-hidden hover:border-[#10B981] transition-colors"
               >
                 <button
                   onClick={() => setExpandedFaq(expandedFaq === idx ? null : idx)}
-                  className="w-full p-6 text-left bg-[#F8FAFC] hover:bg-[#E2E8F0] transition-colors flex items-center justify-between"
+                  className="w-full p-6 text-left bg-gradient-to-r from-[#F8FAFC] to-white hover:from-[#F0F4F8] hover:to-[#F8FAFC] transition-colors flex items-center justify-between"
                 >
-                  <span className="font-semibold text-[#1E3A5F]">{faq.q}</span>
-                  <span
-                    className={`text-[#10B981] font-bold transition-transform ${
+                  <span className="font-bold text-[#1E3A5F]">{faq.q}</span>
+                  <ChevronDown
+                    size={20}
+                    className={`text-[#10B981] transition-transform ${
                       expandedFaq === idx ? "rotate-180" : ""
                     }`}
-                  >
-                    ▼
-                  </span>
+                  />
                 </button>
                 {expandedFaq === idx && (
-                  <div className="p-6 bg-white border-t border-[#E2E8F0]">
+                  <div className="p-6 bg-white border-t-2 border-[#E2E8F0]">
                     <p className="text-[#64748B] leading-relaxed">{faq.a}</p>
                   </div>
                 )}
@@ -606,24 +670,36 @@ export default function Home() {
       </section>
 
       {/* Final CTA Section */}
-      <section id="contact" className="py-20 px-4 sm:px-6 lg:px-8 bg-[#10B981]">
+      <section id="contact" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-[#10B981] to-[#059669]">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+          <h2 className="text-3xl sm:text-4xl font-black text-white mb-4">
             {content.final_cta_title}
           </h2>
           <p className="text-lg text-white/90 mb-8">{content.final_cta_subtitle}</p>
-          <button className="px-8 py-4 bg-white text-[#10B981] rounded-lg font-bold text-lg hover:bg-[#F0FDF4] transition-colors">
+          <button
+            onClick={openWhatsApp}
+            className="px-8 py-4 bg-white text-[#10B981] rounded-lg font-black text-lg hover:bg-[#F0FDF4] transition-all transform hover:scale-105 shadow-xl flex items-center justify-center gap-2 mx-auto"
+          >
+            <MessageCircle size={20} />
             {content.final_cta_btn}
           </button>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-8 px-4 sm:px-6 lg:px-8 bg-[#1E3A5F] text-white">
+      <footer className="py-8 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-[#1E3A5F] to-[#0F1F3C] text-white">
         <div className="max-w-7xl mx-auto text-center">
           <p className="text-sm text-white/70">{content.footer_copyright}</p>
         </div>
       </footer>
+
+      {/* Floating WhatsApp Button */}
+      <button
+        onClick={openWhatsApp}
+        className="fixed bottom-6 right-6 w-14 h-14 bg-[#25D366] text-white rounded-full shadow-2xl hover:bg-[#1DA851] transition-all transform hover:scale-110 flex items-center justify-center z-40 animate-pulse"
+      >
+        <MessageCircle size={24} />
+      </button>
 
       <style>{`
         @keyframes float {
@@ -636,6 +712,17 @@ export default function Home() {
         }
         .animate-float {
           animation: float 3s ease-in-out infinite;
+        }
+        .animate-pulse {
+          animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+          0%, 100% {
+            opacity: 1;
+          }
+          50% {
+            opacity: 0.7;
+          }
         }
       `}</style>
     </div>
