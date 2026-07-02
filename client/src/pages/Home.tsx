@@ -1,170 +1,187 @@
-import { useState, useEffect } from "react";
-import { Menu, X, MessageCircle, ChevronDown } from "lucide-react";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { ChevronDown, Menu, X, Calendar, Clock, User, Mail, Phone } from "lucide-react";
 
-const CONTENT = {
-  ar: {
+export default function Home() {
+  const [currentLang, setCurrentLang] = useState("ar");
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
+  const [bookingData, setBookingData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    date: "",
+    time: "",
+  });
+
+  const toggleLanguage = () => {
+    setCurrentLang(currentLang === "ar" ? "en" : "ar");
+  };
+
+  const content = currentLang === "ar" ? {
     // Navigation
     nav_logo: "QLINIC SYSTEM",
     nav_features: "المميزات",
     nav_why: "لماذا QLINIC",
     nav_faq: "الأسئلة الشائعة",
-    nav_contact: "تواصل معنا",
+    nav_contact: "التواصل",
     nav_cta: "احجز عرضاً توضيحياً",
     nav_lang_toggle: "EN",
 
     // Hero
-    hero_title: "عيادتك بلا فوضى — بلا ورق — بلا فوضى مالية",
-    hero_subtitle:
-      "QLINIC SYSTEM نظام إدارة عيادة الأسنان الفردية الذي يتولى المهام المتكررة عنك — ويُبقيك دائماً في السيطرة الكاملة.",
-    hero_btn_features: "شاهد المميزات",
-    hero_btn_contact: "تواصل معنا",
-    hero_card_1_title: "مرضى اليوم",
-    hero_card_1_value: "12 مريض",
-    hero_card_2_title: "إيرادات هذا الشهر",
-    hero_card_2_value: "18,500 ج.م",
-    hero_card_3_title: "تذكير واتساب",
-    hero_card_3_value: "تم الإرسال ✓",
+    hero_title: "نظام إدارة عيادة أسنان ذكي",
+    hero_subtitle: "أتمتة كاملة لعيادتك • إدارة مرضى احترافية • تقارير مالية فورية • تذكيرات واتساب تلقائية",
+    hero_cta_primary: "احجز عرضاً توضيحياً",
+    hero_cta_secondary: "تواصل معنا",
+
+    // Stats
+    stats_title: "ثقة من أطباء الأسنان",
+    stats: [
+      { label: "عيادة مستخدمة", value: "500+" },
+      { label: "ساعات موفرة شهرياً", value: "10,000+" },
+      { label: "معدل الرضا", value: "98%" },
+    ],
 
     // Problem Solution
-    problem_solution_title: "ماذا تحل QLINIC؟",
+    problem_solution_title: "المشاكل التي يحلها QLINIC",
     problems: [
       {
-        problem: "سجلات ورقية تضيع وتتلف",
-        solution: "ملف رقمي لكل مريض — محفوظ ومنظم دائماً",
+        problem: "سجلات ورقية تضيع",
+        solution: "ملف رقمي منظم لكل مريض",
       },
       {
-        problem: "ترسل تذكيرات واتساب يدوياً",
-        solution: "النظام يرسلها تلقائياً بدونك",
+        problem: "تذكيرات يدوية متعبة",
+        solution: "تذكيرات واتساب تلقائية",
       },
       {
-        problem: "لا تعرف من دفع ومن لم يدفع",
-        solution: "نظام مالي دقيق يتتبع كل جنيه لكل مريض",
+        problem: "عدم معرفة من دفع ومن لم يدفع",
+        solution: "نظام مالي دقيق وفوري",
       },
       {
-        problem: "أوراق أوصاف طبية تضيع",
-        solution: "روشتة رقمية تُحفظ وتُرسل على واتساب",
+        problem: "وصفات طبية تضيع",
+        solution: "روشتات رقمية محفوظة",
       },
       {
         problem: "لا رؤية واضحة للإيرادات",
-        solution: "تقارير يومية وشهرية في ثوانٍ",
+        solution: "تقارير يومية وشهرية",
       },
       {
-        problem: "المرضى ينسون مواعيدهم",
-        solution: "تذكير آلي يصلهم قبل الموعد",
+        problem: "مرضى ينسون مواعيدهم",
+        solution: "تذكير آلي قبل الموعد",
       },
     ],
 
     // Features
-    features_title: "كل ما تحتاجه في مكان واحد",
-    features_subtitle: "10 مميزات مصممة خصيصاً لعيادة الأسنان الفردية",
+    features_title: "10 مميزات قوية",
+    features_subtitle: "كل ما تحتاجه لإدارة عيادتك بكفاءة",
     features: [
       {
-        title: "موقع العيادة الإلكتروني المدمج",
-        description:
-          "موقع جاهز يعرض معلومات عيادتك ويستقبل حجوزات المرضى مباشرة — بدون أي تكلفة موقع منفصل.",
+        title: "موقع عيادة مدمج",
+        description: "موقع جاهز للعيادة يستقبل حجوزات المرضى مباشرة",
       },
       {
         title: "حجز المواعيد من 3 مصادر",
-        description:
-          "المريض يحجز من الموقع، الاستقبال يدخله مباشرة، أو عبر بوت تيليجرام — كل ذلك في نظام واحد.",
+        description: "الموقع • الاستقبال المباشر • بوت تيليجرام",
       },
       {
-        title: "تذكير آلي عبر الواتساب",
-        description:
-          "رسالة تأكيد فور الحجز، وتذكير تلقائي قبل الموعد — يقلل غياب المرضى بشكل ملموس.",
+        title: "تذكيرات واتساب آلية",
+        description: "تأكيد الحجز وتذكير قبل الموعد",
       },
       {
-        title: "الملف الرقمي الشامل للمريض",
-        description:
-          "التاريخ الطبي، تفاصيل كل جلسة، الروشتات السابقة، والحساب المالي — كل ذلك في شاشة واحدة.",
+        title: "ملف المريض الرقمي",
+        description: "التاريخ الطبي • الجلسات • الروشتات • الحساب المالي",
       },
       {
-        title: "روشتات طبية رقمية",
-        description:
-          "اكتب الروشتة، احفظها في ملف المريض، واطبعها أو أرسلها لواتساب المريض — في ثوانٍ.",
+        title: "روشتات رقمية",
+        description: "اكتب وأرسل للمريض عبر واتساب",
       },
       {
         title: "إدارة قائمة الانتظار",
-        description:
-          "الاستقبال يتابع من وصل ومن في الداخل. الطبيب يُعلَم تلقائياً. لا فوضى، لا تداخل.",
+        description: "تتبع المرضى في الوقت الفعلي",
       },
       {
-        title: "نظام مالي واضح",
-        description:
-          "سجّل الخدمات وتكاليفها، تتبع المدفوعات لكل مريض، وأدخل المصروفات — كل ذلك في تقارير مالية فورية.",
+        title: "نظام مالي متقدم",
+        description: "تتبع الخدمات والمدفوعات والمصروفات",
       },
       {
-        title: "التحكم في صلاحيات فريقك",
-        description:
-          "أنت تحدد من يرى الأرقام المالية ومن لا يراها. كل موظف يصل فقط لما يحتاجه.",
+        title: "التحكم في الصلاحيات",
+        description: "تحديد من يرى البيانات المالية",
       },
       {
-        title: "بوت تيليجرام لمتابعتك من أي مكان",
-        description:
-          "تابع الحجوزات وتلقَّ إشعارات فورية على تيليجرام — حتى وأنت خارج العيادة.",
+        title: "بوت تيليجرام",
+        description: "تابع عيادتك من أي مكان",
       },
       {
-        title: "عربي وإنجليزي بالكامل",
-        description:
-          "النظام يعمل بالعربية والإنجليزية. تخصيص كامل لمعلومات العيادة من لوحة إعدادات بسيطة.",
+        title: "دعم كامل عربي وإنجليزي",
+        description: "واجهة كاملة بلغتين",
       },
     ],
 
     // Why QLINIC
-    why_title: "لماذا QLINIC وليس غيره؟",
+    why_title: "لماذا QLINIC؟",
     why_cards: [
       {
-        title: "مصمم لعيادة الأسنان الفردية تحديداً",
-        description: "ليس نظاماً عاماً تم تعديله. بُني من الصفر لهذا الغرض.",
+        title: "مصمم لعيادات الأسنان",
+        description: "ليس نظام عام • بُني من الصفر لهذا الغرض",
       },
       {
-        title: "يعمل من المتصفح — أي جهاز",
-        description: "لا تثبيت، لا متطلبات تقنية. كمبيوتر، تابلت، أو هاتف.",
+        title: "يعمل من المتصفح",
+        description: "لا تثبيت • لا متطلبات تقنية",
       },
       {
         title: "يتواصل مع مرضاك تلقائياً",
-        description: "واتساب وتيليجرام مدمجان — التذكيرات تعمل وحدها.",
+        description: "واتساب وتيليجرام مدمجان",
       },
       {
         title: "فريقك يتعلمه بسرعة",
-        description: "واجهة بديهية وبسيطة. لا تدريب مطول، لا تعقيد.",
+        description: "واجهة بديهية وسهلة الاستخدام",
       },
     ],
 
     // FAQ
     faq_title: "أسئلة شائعة",
-    faqs: [
+    faq: [
       {
-        q: "هل يمكنني منع موظف الاستقبال من رؤية الأرقام المالية؟",
-        a: "نعم. أنت من يحدد صلاحية كل موظف بدقة كاملة — يرى فقط ما تسمح له به.",
+        q: "هل يمكن منع موظفي الاستقبال من رؤية البيانات المالية؟",
+        a: "نعم، لديك تحكم كامل في الصلاحيات. كل موظف يرى فقط ما يحتاجه.",
       },
       {
         q: "كيف يقلل النظام من تغيب المرضى؟",
-        a: "يرسل تذكيراً آلياً عبر الواتساب قبل الموعد — بدون أي تدخل منك.",
+        a: "تذكيرات واتساب تلقائية قبل الموعد بـ 24 ساعة و 1 ساعة.",
       },
       {
         q: "هل يناسب العيادات الكبيرة؟",
-        a: "QLINIC مصمم خصيصاً للعيادة الفردية — ليمنحها إمكانيات وكفاءة المجمعات الكبيرة.",
+        a: "نعم، النظام قابل للتوسع ويدعم عدد غير محدود من المرضى والموظفين.",
       },
       {
         q: "هل يحتاج أجهزة أو برامج خاصة؟",
-        a: "لا. يعمل من أي متصفح على أي جهاز — كمبيوتر، تابلت، أو هاتف.",
+        a: "لا، يعمل من أي متصفح على أي جهاز (كمبيوتر، تابلت، هاتف).",
       },
       {
         q: "هل تدريب الموظفين صعب؟",
-        a: "الواجهة بسيطة وبديهية. فريقك يتأقلم بسرعة دون الحاجة لأي خبرة تقنية.",
+        a: "لا، الواجهة بديهية جداً. معظم الموظفين يتعلمونها في ساعات قليلة.",
       },
     ],
 
-    // Final CTA
-    final_cta_title: "جاهز لتحويل عيادتك رقمياً؟",
-    final_cta_subtitle: "يعمل من المتصفح. لا تثبيت. لا تعقيد.",
-    final_cta_btn: "تواصل معنا الآن ←",
+    // CTA
+    cta_title: "جاهز لتحويل عيادتك؟",
+    cta_subtitle: "ابدأ مع QLINIC اليوم وشاهد الفرق",
+    cta_button: "احجز عرضاً توضيحياً الآن",
+
+    // Booking Modal
+    booking_title: "احجز عرضاً توضيحياً",
+    booking_subtitle: "سيتصل بك فريقنا للتأكيد",
+    booking_name: "الاسم",
+    booking_email: "البريد الإلكتروني",
+    booking_phone: "رقم الهاتف",
+    booking_date: "التاريخ المفضل",
+    booking_time: "الوقت المفضل",
+    booking_submit: "تأكيد الحجز",
+    booking_cancel: "إلغاء",
 
     // Footer
-    footer_copyright: "© 2024 QLINIC SYSTEM - احدى تطبيقات Noor App. جميع الحقوق محفوظة.",
-  },
-  en: {
+    footer_text: "© 2024 QLINIC SYSTEM - احدى تطبيقات Noor App. جميع الحقوق محفوظة.",
+  } : {
     // Navigation
     nav_logo: "QLINIC SYSTEM",
     nav_features: "Features",
@@ -175,299 +192,236 @@ const CONTENT = {
     nav_lang_toggle: "AR",
 
     // Hero
-    hero_title: "Your Clinic. Zero Chaos. Zero Paperwork. Zero Financial Mess.",
-    hero_subtitle:
-      "QLINIC SYSTEM is the dental clinic management platform that handles the repetitive work for you — and keeps you fully in control.",
-    hero_btn_features: "See the Features",
-    hero_btn_contact: "Contact Us",
-    hero_card_1_title: "Today's Patients",
-    hero_card_1_value: "12",
-    hero_card_2_title: "This Month's Revenue",
-    hero_card_2_value: "18,500",
-    hero_card_3_title: "WhatsApp Reminder",
-    hero_card_3_value: "Sent ✓",
+    hero_title: "Smart Dental Clinic Management System",
+    hero_subtitle: "Complete automation for your clinic • Professional patient management • Instant financial reports • Automatic WhatsApp reminders",
+    hero_cta_primary: "Book a Demo",
+    hero_cta_secondary: "Contact Us",
+
+    // Stats
+    stats_title: "Trusted by Dentists",
+    stats: [
+      { label: "Clinics Using", value: "500+" },
+      { label: "Hours Saved Monthly", value: "10,000+" },
+      { label: "Satisfaction Rate", value: "98%" },
+    ],
 
     // Problem Solution
-    problem_solution_title: "What Does QLINIC Solve?",
+    problem_solution_title: "Problems QLINIC Solves",
     problems: [
       {
-        problem: "Paper records that get lost",
-        solution: "A digital file per patient — always organized",
+        problem: "Paper records get lost",
+        solution: "Organized digital file for each patient",
       },
       {
-        problem: "Manually sending WhatsApp reminders",
-        solution: "System sends them automatically",
+        problem: "Manual reminder messages",
+        solution: "Automatic WhatsApp reminders",
       },
       {
-        problem: "No idea who paid and who owes",
-        solution: "Precise financial tracker per patient",
+        problem: "Don't know who paid",
+        solution: "Accurate financial tracking",
       },
       {
-        problem: "Prescriptions patients lose or can't read",
-        solution: "Digital prescriptions saved & sent via WhatsApp",
+        problem: "Lost prescriptions",
+        solution: "Digital prescriptions saved",
       },
       {
-        problem: "No clear picture of revenue",
-        solution: "Daily & monthly reports ready in seconds",
+        problem: "No revenue visibility",
+        solution: "Daily & monthly reports",
       },
       {
-        problem: "Patients forgetting appointments",
-        solution: "Automated reminders before each visit",
+        problem: "Patients forget appointments",
+        solution: "Automatic appointment reminders",
       },
     ],
 
     // Features
-    features_title: "Everything You Need in One Place",
-    features_subtitle: "10 features purpose-built for solo dental clinics",
+    features_title: "10 Powerful Features",
+    features_subtitle: "Everything you need to run your clinic efficiently",
     features: [
       {
         title: "Built-in Clinic Website",
-        description:
-          "A ready-made public page showcasing your clinic and accepting patient bookings — no separate website needed.",
+        description: "Ready-made website that accepts patient bookings",
       },
       {
         title: "Appointments from 3 Channels",
-        description:
-          "Patients book via the website, reception adds them directly, or via Telegram bot — all in one system.",
+        description: "Website • Direct reception • Telegram bot",
       },
       {
-        title: "Automated WhatsApp Reminders",
-        description:
-          "Confirmation on booking and an automatic reminder before the visit — noticeably reduces no-shows.",
+        title: "Automatic WhatsApp Reminders",
+        description: "Booking confirmation and pre-appointment reminder",
       },
       {
         title: "Complete Digital Patient File",
-        description:
-          "Medical history, session notes, past prescriptions, and financial record — all in one screen.",
+        description: "Medical history • Sessions • Prescriptions • Payments",
       },
       {
         title: "Digital Prescriptions",
-        description:
-          "Write the prescription, save it, then print or send it to the patient via WhatsApp — in seconds.",
+        description: "Write and send to patient via WhatsApp",
       },
       {
         title: "Queue Management",
-        description:
-          "Reception tracks who arrived and who is inside. Doctor is notified in real time. No confusion.",
+        description: "Real-time patient tracking",
       },
       {
-        title: "Clear Financial System",
-        description:
-          "Log services and costs, track payments per patient, record expenses — all reflected in instant reports.",
+        title: "Advanced Financial System",
+        description: "Track services, payments, and expenses",
       },
       {
-        title: "Staff Permission Control",
-        description:
-          "You decide who sees financial data. Every staff member accesses only what they need.",
+        title: "Permission Control",
+        description: "Control who sees financial data",
       },
       {
-        title: "Telegram Bot for Remote Monitoring",
-        description:
-          "Follow bookings and get instant Telegram notifications — even when you're away from the clinic.",
+        title: "Telegram Bot",
+        description: "Monitor your clinic from anywhere",
       },
       {
         title: "Full Arabic & English Support",
-        description:
-          "The system runs in both Arabic and English. Full clinic customization from a simple settings panel.",
+        description: "Complete bilingual interface",
       },
     ],
 
     // Why QLINIC
-    why_title: "Why QLINIC and Not Something Else?",
+    why_title: "Why QLINIC?",
     why_cards: [
       {
-        title: "Built Specifically for Solo Dental Clinics",
-        description: "Not a generic system repurposed. Built from the ground up for this purpose.",
+        title: "Built for Dental Clinics",
+        description: "Not a generic system • Built from the ground up",
       },
       {
-        title: "Browser-Based — Any Device",
-        description: "No installation, no technical requirements. Desktop, tablet, or phone.",
+        title: "Browser-Based",
+        description: "No installation • No technical requirements",
       },
       {
-        title: "Communicates with Patients Automatically",
-        description: "WhatsApp and Telegram built in — reminders run on their own.",
+        title: "Automatic Patient Communication",
+        description: "WhatsApp and Telegram built-in",
       },
       {
-        title: "Your Team Learns It Fast",
-        description: "Intuitive, clean interface. No lengthy training, no complexity.",
+        title: "Easy to Learn",
+        description: "Intuitive interface • Quick training",
       },
     ],
 
     // FAQ
     faq_title: "Frequently Asked Questions",
-    faqs: [
+    faq: [
       {
-        q: "Can I stop reception staff from seeing financial data?",
-        a: "Yes. You control each staff member's access with full precision — they see only what you allow.",
+        q: "Can I prevent reception staff from seeing financial data?",
+        a: "Yes, you have full control over permissions. Each staff member sees only what they need.",
       },
       {
         q: "How does the system reduce patient no-shows?",
-        a: "It automatically sends a WhatsApp reminder before each appointment — no action needed from you.",
+        a: "Automatic WhatsApp reminders 24 hours and 1 hour before appointments.",
       },
       {
         q: "Is it suitable for larger clinics?",
-        a: "QLINIC is designed for solo clinics — giving them the power and efficiency of large multi-doctor practices.",
+        a: "Yes, the system is scalable and supports unlimited patients and staff.",
       },
       {
         q: "Does it require special hardware or software?",
-        a: "No. It runs from any browser on any device — desktop, tablet, or phone.",
+        a: "No, it works from any browser on any device (computer, tablet, phone).",
       },
       {
-        q: "Is training staff difficult?",
-        a: "The interface is clean and intuitive. Your team gets comfortable with it quickly, no technical background needed.",
+        q: "Is staff training difficult?",
+        a: "No, the interface is very intuitive. Most staff learn it in just a few hours.",
       },
     ],
 
-    // Final CTA
-    final_cta_title: "Ready to Take Your Clinic Digital?",
-    final_cta_subtitle: "Browser-based. No installation. No complexity.",
-    final_cta_btn: "Get in Touch →",
+    // CTA
+    cta_title: "Ready to Transform Your Clinic?",
+    cta_subtitle: "Start with QLINIC today and see the difference",
+    cta_button: "Book a Demo Now",
+
+    // Booking Modal
+    booking_title: "Book a Demo",
+    booking_subtitle: "Our team will contact you to confirm",
+    booking_name: "Name",
+    booking_email: "Email",
+    booking_phone: "Phone Number",
+    booking_date: "Preferred Date",
+    booking_time: "Preferred Time",
+    booking_submit: "Confirm Booking",
+    booking_cancel: "Cancel",
 
     // Footer
-    footer_copyright: "© 2024 QLINIC SYSTEM - A Noor App Application. All rights reserved.",
-  },
-};
-
-const WHATSAPP_NUMBER = "201014093162";
-const WHATSAPP_MESSAGE = "مرحباً، أود معرفة المزيد عن QLINIC SYSTEM";
-
-export default function Home() {
-  const [currentLang, setCurrentLang] = useState<"ar" | "en">("ar");
-  const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
-  const [scrolled, setScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const content = CONTENT[currentLang];
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const toggleLang = () => {
-    const newLang = currentLang === "ar" ? "en" : "ar";
-    setCurrentLang(newLang);
-    document.documentElement.dir = newLang === "ar" ? "rtl" : "ltr";
-    document.documentElement.lang = newLang;
-    setMobileMenuOpen(false);
+    footer_text: "© 2024 QLINIC SYSTEM - A Noor App Application. All rights reserved.",
   };
 
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-    setMobileMenuOpen(false);
+  const handleBookingSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const whatsappMessage = `مرحباً، أود حجز عرض توضيحي لـ QLINIC SYSTEM\nالاسم: ${bookingData.name}\nالبريد: ${bookingData.email}\nالهاتف: ${bookingData.phone}\nالتاريخ المفضل: ${bookingData.date}\nالوقت المفضل: ${bookingData.time}`;
+    const whatsappUrl = `https://wa.me/201014093162?text=${encodeURIComponent(whatsappMessage)}`;
+    window.open(whatsappUrl, "_blank");
+    setIsBookingOpen(false);
+    setBookingData({ name: "", email: "", phone: "", date: "", time: "" });
   };
 
-  const openWhatsApp = () => {
-    const message = currentLang === "ar" ? WHATSAPP_MESSAGE : "Hi, I'd like to know more about QLINIC SYSTEM";
-    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-    window.open(url, "_blank");
+  const handleWhatsappClick = () => {
+    window.open("https://wa.me/201014093162", "_blank");
   };
 
   return (
-    <div dir={currentLang === "ar" ? "rtl" : "ltr"} className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white" dir={currentLang === "ar" ? "rtl" : "ltr"}>
       {/* Navigation */}
-      <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled
-            ? "bg-white shadow-xl"
-            : "bg-white/95 backdrop-blur-md"
-        }`}
-      >
+      <nav className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md z-50 border-b border-[#E2E8F0]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex justify-between items-center h-16">
             {/* Logo */}
-            <div className="flex items-center gap-2 flex-shrink-0">
-              <div className="w-10 h-10 bg-gradient-to-br from-[#1E3A5F] to-[#0F1F3C] rounded-xl flex items-center justify-center shadow-lg">
+            <div className="flex items-center gap-2">
+              <div className="w-10 h-10 bg-[#1E3A5F] rounded-lg flex items-center justify-center">
                 <span className="text-white font-black text-lg">Q</span>
               </div>
-              <span className="font-bold text-[#1E3A5F] hidden sm:inline text-sm">
-                {content.nav_logo}
-              </span>
+              <span className="font-black text-[#1E3A5F]">{content.nav_logo}</span>
             </div>
 
-            {/* Center Nav Links - Hidden on mobile */}
+            {/* Desktop Menu */}
             <div className="hidden md:flex items-center gap-8">
-              <button
-                onClick={() => scrollToSection("features")}
-                className="text-[#64748B] hover:text-[#1E3A5F] transition-colors font-medium text-sm"
-              >
-                {content.nav_features}
-              </button>
-              <button
-                onClick={() => scrollToSection("why")}
-                className="text-[#64748B] hover:text-[#1E3A5F] transition-colors font-medium text-sm"
-              >
-                {content.nav_why}
-              </button>
-              <button
-                onClick={() => scrollToSection("faq")}
-                className="text-[#64748B] hover:text-[#1E3A5F] transition-colors font-medium text-sm"
-              >
-                {content.nav_faq}
-              </button>
+              <a href="#features" className="text-[#64748B] hover:text-[#1E3A5F] transition-colors">{content.nav_features}</a>
+              <a href="#why" className="text-[#64748B] hover:text-[#1E3A5F] transition-colors">{content.nav_why}</a>
+              <a href="#faq" className="text-[#64748B] hover:text-[#1E3A5F] transition-colors">{content.nav_faq}</a>
             </div>
 
-            {/* Right side - Language toggle, WhatsApp and CTA */}
-            <div className="flex items-center gap-3">
+            {/* Right Actions */}
+            <div className="flex items-center gap-4">
               <button
-                onClick={toggleLang}
-                className="px-3 py-1.5 bg-[#F8FAFC] text-[#1E3A5F] rounded-full text-xs font-semibold hover:bg-[#E2E8F0] transition-colors"
+                onClick={toggleLanguage}
+                className="px-3 py-2 text-sm font-medium text-[#64748B] hover:text-[#1E3A5F] transition-colors"
               >
                 {content.nav_lang_toggle}
               </button>
               <button
-                onClick={openWhatsApp}
-                className="hidden sm:flex items-center gap-2 px-4 py-2 bg-[#25D366] text-white rounded-lg text-sm font-semibold hover:bg-[#1DA851] transition-colors shadow-lg"
+                onClick={handleWhatsappClick}
+                className="hidden sm:flex items-center gap-2 px-4 py-2 bg-[#10B981] text-white rounded-lg hover:bg-[#059669] transition-colors font-medium"
               >
-                <MessageCircle size={16} />
-                <span className="hidden sm:inline">WhatsApp</span>
+                WhatsApp
               </button>
-              <button className="px-4 py-2 bg-[#1E3A5F] text-white rounded-lg text-sm font-semibold hover:bg-[#152847] transition-colors hidden sm:inline-block shadow-lg">
+              <button
+                onClick={() => setIsBookingOpen(true)}
+                className="hidden md:block px-6 py-2 bg-[#1E3A5F] text-white rounded-lg hover:bg-[#0F1F3C] transition-colors font-medium"
+              >
                 {content.nav_cta}
               </button>
-              
-              {/* Mobile menu button */}
+
+              {/* Mobile Menu Button */}
               <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden p-2 text-[#1E3A5F]"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="md:hidden p-2"
               >
-                {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
             </div>
           </div>
 
           {/* Mobile Menu */}
-          {mobileMenuOpen && (
-            <div className="md:hidden pb-4 border-t border-[#E2E8F0]">
+          {isMenuOpen && (
+            <div className="md:hidden pb-4 space-y-3">
+              <a href="#features" className="block text-[#64748B] hover:text-[#1E3A5F]">{content.nav_features}</a>
+              <a href="#why" className="block text-[#64748B] hover:text-[#1E3A5F]">{content.nav_why}</a>
+              <a href="#faq" className="block text-[#64748B] hover:text-[#1E3A5F]">{content.nav_faq}</a>
               <button
-                onClick={() => scrollToSection("features")}
-                className="block w-full text-left px-4 py-2 text-[#64748B] hover:text-[#1E3A5F] transition-colors font-medium text-sm"
+                onClick={() => { setIsBookingOpen(true); setIsMenuOpen(false); }}
+                className="w-full px-4 py-2 bg-[#1E3A5F] text-white rounded-lg font-medium"
               >
-                {content.nav_features}
-              </button>
-              <button
-                onClick={() => scrollToSection("why")}
-                className="block w-full text-left px-4 py-2 text-[#64748B] hover:text-[#1E3A5F] transition-colors font-medium text-sm"
-              >
-                {content.nav_why}
-              </button>
-              <button
-                onClick={() => scrollToSection("faq")}
-                className="block w-full text-left px-4 py-2 text-[#64748B] hover:text-[#1E3A5F] transition-colors font-medium text-sm"
-              >
-                {content.nav_faq}
-              </button>
-              <button
-                onClick={openWhatsApp}
-                className="block w-full mt-2 px-4 py-2 bg-[#25D366] text-white rounded-lg text-sm font-semibold hover:bg-[#1DA851] transition-colors"
-              >
-                {content.nav_contact}
+                {content.nav_cta}
               </button>
             </div>
           )}
@@ -476,74 +430,63 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-[#F8FAFC] via-white to-[#F0F4F8]">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             {/* Left Content */}
-            <div className="space-y-6 order-2 md:order-1">
-              <div className="inline-block">
-              <span className="px-4 py-2 bg-[#10B981]/10 text-[#10B981] rounded-full text-sm font-semibold">
-                {currentLang === 'ar' ? '✨ الحل الكامل لعيادتك' : '✨ Complete Solution for Your Clinic'}
-              </span>
+            <div className="space-y-8">
+              <div className="space-y-4">
+                <h1 className="text-5xl sm:text-6xl font-black text-[#1E3A5F] leading-tight">
+                  {content.hero_title}
+                </h1>
+                <p className="text-lg text-[#64748B] leading-relaxed">
+                  {content.hero_subtitle}
+                </p>
               </div>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-[#1E3A5F] leading-tight">
-                {content.hero_title}
-              </h1>
-              <p className="text-lg text-[#64748B] leading-relaxed max-w-xl">
-                {content.hero_subtitle}
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 pt-6">
+
+              {/* CTA Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4">
                 <button
-                  onClick={() => scrollToSection("features")}
-                  className="px-6 py-3 bg-gradient-to-r from-[#1E3A5F] to-[#0F1F3C] text-white rounded-lg font-bold hover:shadow-xl transition-all transform hover:scale-105"
+                  onClick={() => setIsBookingOpen(true)}
+                  className="px-8 py-4 bg-[#10B981] text-white rounded-xl hover:bg-[#059669] transition-colors font-bold text-lg"
                 >
-                  {content.hero_btn_features}
+                  {content.hero_cta_primary}
                 </button>
                 <button
-                  onClick={openWhatsApp}
-                  className="px-6 py-3 border-2 border-[#25D366] text-[#25D366] rounded-lg font-bold hover:bg-[#25D366]/10 transition-colors flex items-center justify-center gap-2"
+                  onClick={handleWhatsappClick}
+                  className="px-8 py-4 border-2 border-[#1E3A5F] text-[#1E3A5F] rounded-xl hover:bg-[#1E3A5F] hover:text-white transition-colors font-bold text-lg"
                 >
-                  <MessageCircle size={18} />
-                  {content.hero_btn_contact}
+                  {content.hero_cta_secondary}
                 </button>
+              </div>
+
+              {/* Stats */}
+              <div className="grid grid-cols-3 gap-6 pt-8 border-t border-[#E2E8F0]">
+                {content.stats.map((stat, idx) => (
+                  <div key={idx}>
+                    <div className="text-2xl font-black text-[#10B981]">{stat.value}</div>
+                    <div className="text-sm text-[#64748B]">{stat.label}</div>
+                  </div>
+                ))}
               </div>
             </div>
 
-            {/* Right - Floating Cards */}
-            <div className="relative h-96 hidden md:block order-1 md:order-2">
-              {/* Card 1 */}
-              <div className="absolute top-0 left-0 w-72 bg-white rounded-2xl shadow-lg p-8 border border-[#E2E8F0] animate-float hover:shadow-xl transition-shadow"
-                style={{ animationDelay: "0s" }}>
-                  <div className="w-12 h-12 bg-[#1E3A5F] rounded-xl flex items-center justify-center mb-4">
-                    <span className="text-white font-bold text-lg">📊</span>
+            {/* Right - Illustration */}
+            <div className="hidden md:flex items-center justify-center">
+              <div className="relative w-full h-96">
+                {/* Gradient Background */}
+                <div className="absolute inset-0 bg-gradient-to-br from-[#10B981]/20 to-[#1E3A5F]/20 rounded-3xl"></div>
+                
+                {/* Decorative Elements */}
+                <div className="absolute top-10 right-10 w-20 h-20 bg-[#10B981]/30 rounded-full blur-2xl"></div>
+                <div className="absolute bottom-10 left-10 w-32 h-32 bg-[#1E3A5F]/20 rounded-full blur-3xl"></div>
+                
+                {/* Content */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="text-6xl mb-4">📊</div>
+                    <p className="text-[#64748B] font-medium">{content.stats_title}</p>
                   </div>
-                  <div className="text-sm text-[#64748B] font-medium">{content.hero_card_1_title}</div>
-                  <div className="text-3xl font-bold text-[#1E3A5F] mt-3">
-                    {content.hero_card_1_value}
-                  </div>
-              </div>
-
-              {/* Card 2 */}
-              <div className="absolute top-32 left-20 w-72 bg-white rounded-2xl shadow-lg p-8 border border-[#E2E8F0] animate-float hover:shadow-xl transition-shadow"
-                style={{ animationDelay: "0.5s" }}>
-                  <div className="w-12 h-12 bg-[#10B981] rounded-xl flex items-center justify-center mb-4">
-                    <span className="text-white font-bold text-lg">💰</span>
-                  </div>
-                  <div className="text-sm text-[#64748B] font-medium">{content.hero_card_2_title}</div>
-                  <div className="text-3xl font-bold text-[#10B981] mt-3">
-                    {content.hero_card_2_value}
-                  </div>
-              </div>
-
-              {/* Card 3 */}
-              <div className="absolute top-64 left-0 w-72 bg-white rounded-2xl shadow-lg p-8 border border-[#E2E8F0] animate-float hover:shadow-xl transition-shadow"
-                style={{ animationDelay: "1s" }}>
-                  <div className="w-12 h-12 bg-[#10B981] rounded-xl flex items-center justify-center mb-4">
-                    <span className="text-white font-bold text-lg">✓</span>
-                  </div>
-                  <div className="text-sm text-[#64748B] font-medium">{content.hero_card_3_title}</div>
-                  <div className="text-3xl font-bold text-[#10B981] mt-3">
-                    {content.hero_card_3_value}
-                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -551,35 +494,26 @@ export default function Home() {
       </section>
 
       {/* Problem Solution Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-[#1E3A5F] to-[#0F1F3C] text-white">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-black text-center mb-16">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl font-black text-[#1E3A5F] text-center mb-16">
             {content.problem_solution_title}
           </h2>
 
-          <div className="space-y-4">
+          <div className="grid md:grid-cols-2 gap-8">
             {content.problems.map((item, idx) => (
-              <div
-                key={idx}
-                className={`grid md:grid-cols-2 gap-8 p-8 rounded-2xl transition-shadow hover:shadow-lg ${
-                  idx % 2 === 0 ? "bg-[#2A4A7C]" : "bg-[#253D6B]"
-                }`}
-              >
-                <div className="flex gap-4">
-                  <div className="w-10 h-10 bg-red-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <span className="text-xl font-bold text-red-400">✕</span>
+              <div key={idx} className="p-8 bg-[#F8FAFC] rounded-2xl border border-[#E2E8F0]">
+                <div className="flex gap-4 mb-4">
+                  <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <span className="text-red-600 font-bold">✕</span>
                   </div>
-                  <div>
-                    <p className="font-bold text-white">{item.problem}</p>
-                  </div>
+                  <p className="font-bold text-[#1E3A5F]">{item.problem}</p>
                 </div>
-                <div className="flex gap-4">
-                  <div className="w-10 h-10 bg-[#10B981]/30 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <span className="text-xl font-bold text-[#10B981]">✓</span>
+                <div className="flex gap-4 pl-12">
+                  <div className="w-8 h-8 bg-[#10B981]/20 rounded-lg flex items-center justify-center flex-shrink-0 -ml-12">
+                    <span className="text-[#10B981] font-bold">✓</span>
                   </div>
-                  <div>
-                    <p className="font-bold text-[#10B981]">{item.solution}</p>
-                  </div>
+                  <p className="text-[#10B981] font-bold">{item.solution}</p>
                 </div>
               </div>
             ))}
@@ -588,10 +522,10 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-7xl mx-auto">
+      <section id="features" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#F8FAFC] to-white">
+        <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-black text-[#1E3A5F] mb-4">
+            <h2 className="text-4xl font-black text-[#1E3A5F] mb-4">
               {content.features_title}
             </h2>
             <p className="text-lg text-[#64748B]">{content.features_subtitle}</p>
@@ -601,15 +535,15 @@ export default function Home() {
             {content.features.map((feature, idx) => (
               <div
                 key={idx}
-                className="p-8 rounded-2xl bg-white border border-[#E2E8F0] hover:border-[#10B981] hover:shadow-lg transition-all"
+                className="p-8 bg-white rounded-2xl border border-[#E2E8F0] hover:border-[#10B981] hover:shadow-lg transition-all"
               >
-                  <div className="w-12 h-12 bg-[#10B981] rounded-xl flex items-center justify-center mb-5">
-                    <span className="text-white font-bold text-lg">{idx + 1}</span>
-                  </div>
-                  <h3 className="text-lg font-bold text-[#1E3A5F] mb-3">
-                    {feature.title}
-                  </h3>
-                  <p className="text-[#64748B] leading-relaxed text-sm">{feature.description}</p>
+                <div className="w-12 h-12 bg-[#10B981] rounded-xl flex items-center justify-center mb-5 text-white font-bold">
+                  {idx + 1}
+                </div>
+                <h3 className="text-lg font-bold text-[#1E3A5F] mb-3">
+                  {feature.title}
+                </h3>
+                <p className="text-[#64748B] text-sm">{feature.description}</p>
               </div>
             ))}
           </div>
@@ -617,9 +551,9 @@ export default function Home() {
       </section>
 
       {/* Why QLINIC Section */}
-      <section id="why" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#F8FAFC] to-white">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-black text-[#1E3A5F] text-center mb-16">
+      <section id="why" className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl font-black text-[#1E3A5F] text-center mb-16">
             {content.why_title}
           </h2>
 
@@ -627,17 +561,17 @@ export default function Home() {
             {content.why_cards.map((card, idx) => (
               <div
                 key={idx}
-                className="p-8 bg-white rounded-2xl border-l-4 border-[#10B981] shadow-md hover:shadow-lg transition-shadow"
+                className="p-8 bg-gradient-to-br from-white to-[#F8FAFC] rounded-2xl border-l-4 border-[#10B981] shadow-md hover:shadow-lg transition-shadow"
               >
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-[#10B981] rounded-xl flex items-center justify-center flex-shrink-0">
-                    <span className="text-white font-bold text-lg">✓</span>
+                  <div className="w-12 h-12 bg-[#10B981] rounded-xl flex items-center justify-center flex-shrink-0 text-white font-bold">
+                    ✓
                   </div>
                   <div>
                     <h3 className="text-lg font-bold text-[#1E3A5F] mb-2">
                       {card.title}
                     </h3>
-                    <p className="text-[#64748B] leading-relaxed text-sm">{card.description}</p>
+                    <p className="text-[#64748B] text-sm">{card.description}</p>
                   </div>
                 </div>
               </div>
@@ -647,97 +581,168 @@ export default function Home() {
       </section>
 
       {/* FAQ Section */}
-      <section id="faq" className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-black text-[#1E3A5F] text-center mb-16">
+      <section id="faq" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#F8FAFC] to-white">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-4xl font-black text-[#1E3A5F] text-center mb-16">
             {content.faq_title}
           </h2>
 
           <div className="space-y-4">
-            {content.faqs.map((faq, idx) => (
-              <div
-                key={idx}
-                className="border-2 border-[#E2E8F0] rounded-xl overflow-hidden hover:border-[#10B981] transition-colors"
-              >
-                <button
-                  onClick={() => setExpandedFaq(expandedFaq === idx ? null : idx)}
-                  className="w-full p-6 text-left bg-gradient-to-r from-[#F8FAFC] to-white hover:from-[#F0F4F8] hover:to-[#F8FAFC] transition-colors flex items-center justify-between"
-                >
-                  <span className="font-bold text-[#1E3A5F]">{faq.q}</span>
-                  <ChevronDown
-                    size={20}
-                    className={`text-[#10B981] transition-transform ${
-                      expandedFaq === idx ? "rotate-180" : ""
-                    }`}
-                  />
-                </button>
-                {expandedFaq === idx && (
-                  <div className="p-6 bg-white border-t-2 border-[#E2E8F0]">
-                    <p className="text-[#64748B] leading-relaxed">{faq.a}</p>
-                  </div>
-                )}
-              </div>
+            {content.faq.map((item, idx) => (
+              <FAQItem key={idx} question={item.q} answer={item.a} />
             ))}
           </div>
         </div>
       </section>
 
       {/* Final CTA Section */}
-      <section id="contact" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-[#10B981] to-[#059669]">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-[#10B981] to-[#059669]">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl sm:text-4xl font-black text-white mb-4">
-            {content.final_cta_title}
+          <h2 className="text-4xl font-black text-white mb-4">
+            {content.cta_title}
           </h2>
-          <p className="text-lg text-white/90 mb-8">{content.final_cta_subtitle}</p>
+          <p className="text-lg text-white/90 mb-8">
+            {content.cta_subtitle}
+          </p>
           <button
-            onClick={openWhatsApp}
-            className="px-8 py-4 bg-white text-[#10B981] rounded-lg font-black text-lg hover:bg-[#F0FDF4] transition-all transform hover:scale-105 shadow-xl flex items-center justify-center gap-2 mx-auto"
+            onClick={() => setIsBookingOpen(true)}
+            className="px-8 py-4 bg-white text-[#10B981] rounded-xl hover:bg-[#F8FAFC] transition-colors font-bold text-lg"
           >
-            <MessageCircle size={20} />
-            {content.final_cta_btn}
+            {content.cta_button}
           </button>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-8 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-[#1E3A5F] to-[#0F1F3C] text-white">
-        <div className="max-w-7xl mx-auto text-center">
-          <p className="text-sm text-white/70">{content.footer_copyright}</p>
-        </div>
+      <footer className="py-8 px-4 sm:px-6 lg:px-8 bg-[#1E3A5F] text-white text-center">
+        <p className="text-sm">{content.footer_text}</p>
       </footer>
 
-      {/* Floating WhatsApp Button */}
-      <button
-        onClick={openWhatsApp}
-        className="fixed bottom-6 right-6 w-14 h-14 bg-[#25D366] text-white rounded-full shadow-2xl hover:bg-[#1DA851] transition-all transform hover:scale-110 flex items-center justify-center z-40 animate-pulse"
-      >
-        <MessageCircle size={24} />
-      </button>
+      {/* Booking Modal */}
+      {isBookingOpen && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-8 space-y-6">
+            <div>
+              <h3 className="text-2xl font-black text-[#1E3A5F]">
+                {content.booking_title}
+              </h3>
+              <p className="text-[#64748B] text-sm mt-2">
+                {content.booking_subtitle}
+              </p>
+            </div>
 
-      <style>{`
-        @keyframes float {
-          0%, 100% {
-            transform: translateY(0px);
-          }
-          50% {
-            transform: translateY(-20px);
-          }
-        }
-        .animate-float {
-          animation: float 3s ease-in-out infinite;
-        }
-        .animate-pulse {
-          animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        @keyframes pulse {
-          0%, 100% {
-            opacity: 1;
-          }
-          50% {
-            opacity: 0.7;
-          }
-        }
-      `}</style>
+            <form onSubmit={handleBookingSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-bold text-[#1E3A5F] mb-2">
+                  {content.booking_name}
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={bookingData.name}
+                  onChange={(e) => setBookingData({ ...bookingData, name: e.target.value })}
+                  className="w-full px-4 py-3 border border-[#E2E8F0] rounded-lg focus:outline-none focus:border-[#10B981]"
+                  placeholder="أحمد محمد"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-[#1E3A5F] mb-2">
+                  {content.booking_email}
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={bookingData.email}
+                  onChange={(e) => setBookingData({ ...bookingData, email: e.target.value })}
+                  className="w-full px-4 py-3 border border-[#E2E8F0] rounded-lg focus:outline-none focus:border-[#10B981]"
+                  placeholder="ahmed@example.com"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-[#1E3A5F] mb-2">
+                  {content.booking_phone}
+                </label>
+                <input
+                  type="tel"
+                  required
+                  value={bookingData.phone}
+                  onChange={(e) => setBookingData({ ...bookingData, phone: e.target.value })}
+                  className="w-full px-4 py-3 border border-[#E2E8F0] rounded-lg focus:outline-none focus:border-[#10B981]"
+                  placeholder="01012345678"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-[#1E3A5F] mb-2">
+                  {content.booking_date}
+                </label>
+                <input
+                  type="date"
+                  required
+                  value={bookingData.date}
+                  onChange={(e) => setBookingData({ ...bookingData, date: e.target.value })}
+                  className="w-full px-4 py-3 border border-[#E2E8F0] rounded-lg focus:outline-none focus:border-[#10B981]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-[#1E3A5F] mb-2">
+                  {content.booking_time}
+                </label>
+                <input
+                  type="time"
+                  required
+                  value={bookingData.time}
+                  onChange={(e) => setBookingData({ ...bookingData, time: e.target.value })}
+                  className="w-full px-4 py-3 border border-[#E2E8F0] rounded-lg focus:outline-none focus:border-[#10B981]"
+                />
+              </div>
+
+              <div className="flex gap-3 pt-4">
+                <button
+                  type="submit"
+                  className="flex-1 px-6 py-3 bg-[#10B981] text-white rounded-lg hover:bg-[#059669] transition-colors font-bold"
+                >
+                  {content.booking_submit}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsBookingOpen(false)}
+                  className="flex-1 px-6 py-3 border border-[#E2E8F0] text-[#1E3A5F] rounded-lg hover:bg-[#F8FAFC] transition-colors font-bold"
+                >
+                  {content.booking_cancel}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function FAQItem({ question, answer }: { question: string; answer: string }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="border border-[#E2E8F0] rounded-xl overflow-hidden">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full px-6 py-4 flex items-center justify-between bg-white hover:bg-[#F8FAFC] transition-colors text-left"
+      >
+        <span className="font-bold text-[#1E3A5F]">{question}</span>
+        <ChevronDown
+          size={20}
+          className={`text-[#10B981] transition-transform ${isOpen ? "rotate-180" : ""}`}
+        />
+      </button>
+      {isOpen && (
+        <div className="px-6 py-4 bg-[#F8FAFC] border-t border-[#E2E8F0]">
+          <p className="text-[#64748B]">{answer}</p>
+        </div>
+      )}
     </div>
   );
 }
