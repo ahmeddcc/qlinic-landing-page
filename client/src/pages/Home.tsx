@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { Menu, X, MessageCircle, ChevronDown } from "lucide-react";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { trpc } from "@/lib/trpc";
 
 const CONTENT = {
   ar: {
@@ -354,6 +356,10 @@ const WHATSAPP_NUMBER = "201014093162";
 const WHATSAPP_MESSAGE = "مرحباً، أود معرفة المزيد عن QLINIC SYSTEM";
 
 export default function Home() {
+  // The userAuth hooks provides authentication state
+  // To implement login/logout functionality, simply call logout() or redirect to getLoginUrl()
+  let { user, loading, error, isAuthenticated, logout } = useAuth();
+
   const [currentLang, setCurrentLang] = useState<"ar" | "en">("ar");
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
   const [scrolled, setScrolled] = useState(false);
@@ -378,22 +384,32 @@ export default function Home() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleBookingSubmit = (e: React.FormEvent) => {
+  const sendBookingMutation = trpc.booking.sendMessage.useMutation();
+
+  const handleBookingSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const message = currentLang === "ar" 
-      ? `مرحباً، أود حجز عرض توضيحي لـ QLINIC SYSTEM\n\nالاسم: ${bookingData.name}\nالبريد الإلكتروني: ${bookingData.email}\nرقم الهاتف: ${bookingData.phone}\nالتاريخ المفضل: ${bookingData.date}\nالوقت المفضل: ${bookingData.time}`
-      : `Hello, I would like to book a demo for QLINIC SYSTEM\n\nName: ${bookingData.name}\nEmail: ${bookingData.email}\nPhone: ${bookingData.phone}\nPreferred Date: ${bookingData.date}\nPreferred Time: ${bookingData.time}`;
     
-    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
-    
-    setBookingSuccess(true);
-    setBookingData({ name: "", email: "", phone: "", date: "", time: "" });
-    
-    setTimeout(() => {
-      setIsBookingModalOpen(false);
+    try {
+      await sendBookingMutation.mutateAsync({
+        name: bookingData.name,
+        email: bookingData.email,
+        phone: bookingData.phone,
+        date: bookingData.date,
+        time: bookingData.time,
+        language: currentLang,
+      });
+      
+      setBookingSuccess(true);
+      setBookingData({ name: "", email: "", phone: "", date: "", time: "" });
+      
+      setTimeout(() => {
+        setIsBookingModalOpen(false);
+        setBookingSuccess(false);
+      }, 3000);
+    } catch (error) {
+      console.error("Error sending booking:", error);
       setBookingSuccess(false);
-    }, 3000);
+    }
   };
 
   const toggleLang = () => {
