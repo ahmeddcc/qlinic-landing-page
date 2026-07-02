@@ -172,7 +172,7 @@ const CONTENT = {
     nav_faq: "FAQ",
     nav_contact: "Contact",
     nav_cta: "Book a Demo",
-    nav_lang_toggle: "عربي",
+    nav_lang_toggle: "AR",
 
     // Hero
     hero_title: "Your Clinic. Zero Chaos. Zero Paperwork. Zero Financial Mess.",
@@ -481,9 +481,9 @@ export default function Home() {
             {/* Left Content */}
             <div className="space-y-6 order-2 md:order-1">
               <div className="inline-block">
-                <span className="px-4 py-2 bg-[#10B981]/10 text-[#10B981] rounded-full text-sm font-semibold">
-                  ✨ الحل الكامل لعيادتك
-                </span>
+              <span className="px-4 py-2 bg-[#10B981]/10 text-[#10B981] rounded-full text-sm font-semibold">
+                {currentLang === 'ar' ? '✨ الحل الكامل لعيادتك' : '✨ Complete Solution for Your Clinic'}
+              </span>
               </div>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-[#1E3A5F] leading-tight">
                 {content.hero_title}
