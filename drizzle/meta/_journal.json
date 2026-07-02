@@ -1,5 +1,13 @@
 {
   "version": "7",
   "dialect": "mysql",
-  "entries": []
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1783032376914,
+      "tag": "0000_wonderful_darkstar",
+      "breakpoints": true
+    }
+  ]
 }

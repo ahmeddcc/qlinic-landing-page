@@ -845,7 +845,8 @@ export default function Home() {
                   required
                   value={bookingData.date}
                   onChange={(e) => setBookingData({ ...bookingData, date: e.target.value })}
-                  className="w-full px-4 py-3 border border-[#E2E8F0] rounded-lg focus:outline-none focus:border-[#10B981]"
+                  min={new Date().toISOString().split('T')[0]}
+                  className="w-full px-4 py-3 border border-[#E2E8F0] rounded-lg focus:outline-none focus:border-[#10B981] focus:ring-2 focus:ring-[#10B981]/20 transition-all cursor-pointer"
                 />
               </div>
 
@@ -853,21 +854,39 @@ export default function Home() {
                 <label className="block text-sm font-bold text-[#1E3A5F] mb-3">
                   {content.booking_form_time}
                 </label>
-                <div className="grid grid-cols-3 gap-2">
-                  {['09:00', '10:00', '11:00', '14:00', '15:00', '16:00'].map((time) => (
-                    <button
-                      key={time}
-                      type="button"
-                      onClick={() => setBookingData({ ...bookingData, time })}
-                      className={`px-3 py-2 rounded-lg font-semibold text-sm transition-all ${
-                        bookingData.time === time
-                          ? 'bg-[#10B981] text-white shadow-lg'
-                          : 'bg-[#F0F4F8] text-[#1E3A5F] border border-[#E2E8F0] hover:border-[#10B981]'
-                      }`}
-                    >
-                      {time}
-                    </button>
-                  ))}
+                <div className="space-y-3">
+                  <div className="grid grid-cols-3 gap-2">
+                    {['09:00 AM', '10:00 AM', '11:00 AM'].map((time) => (
+                      <button
+                        key={time}
+                        type="button"
+                        onClick={() => setBookingData({ ...bookingData, time })}
+                        className={`px-3 py-2 rounded-lg font-semibold text-sm transition-all ${
+                          bookingData.time === time
+                            ? 'bg-[#10B981] text-white shadow-lg'
+                            : 'bg-[#F0F4F8] text-[#1E3A5F] border border-[#E2E8F0] hover:border-[#10B981]'
+                        }`}
+                      >
+                        {time}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    {['02:00 PM', '03:00 PM', '04:00 PM'].map((time) => (
+                      <button
+                        key={time}
+                        type="button"
+                        onClick={() => setBookingData({ ...bookingData, time })}
+                        className={`px-3 py-2 rounded-lg font-semibold text-sm transition-all ${
+                          bookingData.time === time
+                            ? 'bg-[#10B981] text-white shadow-lg'
+                            : 'bg-[#F0F4F8] text-[#1E3A5F] border border-[#E2E8F0] hover:border-[#10B981]'
+                        }`}
+                      >
+                        {time}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
 

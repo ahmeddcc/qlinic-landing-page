@@ -3,6 +3,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { z } from "zod";
+import { createBooking, getAllBookings } from "./db";
 
 export const appRouter = router({
   system: systemRouter,
@@ -18,6 +19,9 @@ export const appRouter = router({
   }),
 
   booking: router({
+    getBookings: publicProcedure.query(async () => {
+      return await getAllBookings();
+    }),
     sendMessage: publicProcedure
       .input(
         z.object({
@@ -46,8 +50,8 @@ export const appRouter = router({
 
           const message =
             input.language === "ar"
-              ? `🎯 *طلب حجز عرض توضيحي جديد*\n\n📝 *الاسم:* ${input.name}\n📧 *البريد:* ${input.email}\n📱 *الهاتف:* ${input.phone}\n📅 *التاريخ:* ${input.date}\n⏰ *الوقت:* ${input.time}`
-              : `🎯 *New Demo Booking Request*\n\n📝 *Name:* ${input.name}\n📧 *Email:* ${input.email}\n📱 *Phone:* ${input.phone}\n📅 *Date:* ${input.date}\n⏰ *Time:* ${input.time}`;
+              ? `🎯 *QLINIC SYSTEM - طلب حجز عرض توضيحي جديد*\n\n📝 *الاسم:* ${input.name}\n📧 *البريد:* ${input.email}\n📱 *الهاتف:* ${input.phone}\n📅 *التاريخ:* ${input.date}\n⏰ *الوقت:* ${input.time}`
+              : `🎯 *QLINIC SYSTEM - New Demo Booking Request*\n\n📝 *Name:* ${input.name}\n📧 *Email:* ${input.email}\n📱 *Phone:* ${input.phone}\n📅 *Date:* ${input.date}\n⏰ *Time:* ${input.time}`;
 
           // Send message via Telegram Bot API
           const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
@@ -74,6 +78,21 @@ export const appRouter = router({
                 ? "حدث خطأ في إرسال الرسالة. يرجى المحاولة لاحقاً."
                 : "Failed to send message. Please try again.",
             };
+          }
+
+          // Save booking to database
+          try {
+            await createBooking({
+              name: input.name,
+              email: input.email,
+              phone: input.phone,
+              date: input.date,
+              time: input.time,
+              language: input.language,
+              status: "pending",
+            });
+          } catch (dbError) {
+            console.error("[Booking] Failed to save booking to database:", dbError);
           }
 
           return {
