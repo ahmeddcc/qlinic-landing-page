@@ -40,22 +40,18 @@ export const appRouter = router({
           const encodedMessage = encodeURIComponent(message);
           const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
 
-          // Send via fetch to WhatsApp API
-          await fetch(whatsappUrl, {
-            method: "GET",
-          }).catch(() => {
-            // Silent fail - WhatsApp API doesn't require response
-          });
-
+          // Return the WhatsApp URL for the frontend to open directly
           return {
             success: true,
-            message: "Message sent successfully",
+            message: "Booking prepared successfully",
+            whatsappUrl: whatsappUrl,
           };
         } catch (error) {
-          console.error("[Booking] Error sending message:", error);
+          console.error("[Booking] Error preparing booking:", error);
           return {
             success: false,
-            message: "Failed to send message",
+            message: "Failed to prepare booking",
+            whatsappUrl: null,
           };
         }
       }),

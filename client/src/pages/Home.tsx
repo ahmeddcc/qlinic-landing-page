@@ -390,7 +390,7 @@ export default function Home() {
     e.preventDefault();
     
     try {
-      await sendBookingMutation.mutateAsync({
+      const result = await sendBookingMutation.mutateAsync({
         name: bookingData.name,
         email: bookingData.email,
         phone: bookingData.phone,
@@ -398,6 +398,11 @@ export default function Home() {
         time: bookingData.time,
         language: currentLang,
       });
+      
+      // Open WhatsApp directly with the message
+      if (result.whatsappUrl) {
+        window.open(result.whatsappUrl, '_blank');
+      }
       
       setBookingSuccess(true);
       setBookingData({ name: "", email: "", phone: "", date: "", time: "" });
