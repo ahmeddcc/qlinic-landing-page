@@ -19,6 +19,8 @@ const CONTENT = {
     booking_form_time: "الوقت المفضل",
     booking_form_submit: "تأكيد الحجز",
     booking_form_cancel: "إلغاء",
+    booking_success_title: "تم إرسال رسالتك بنجاح!",
+    booking_success_message: "شكراً لاهتمامك. سيتصل بك فريقنا قريباً.",
     nav_lang_toggle: "EN",
 
     // Hero
@@ -340,6 +342,8 @@ const CONTENT = {
     booking_form_time: "Preferred Time",
     booking_form_submit: "Confirm Booking",
     booking_form_cancel: "Cancel",
+    booking_success_title: "Message Sent Successfully!",
+    booking_success_message: "Thank you for your interest. Our team will contact you soon.",
 
     // Footer
     footer_copyright: "© 2024 QLINIC SYSTEM - A Noor App Application. All rights reserved.",
@@ -355,6 +359,7 @@ export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [bookingSuccess, setBookingSuccess] = useState(false);
   const [bookingData, setBookingData] = useState({
     name: "",
     email: "",
@@ -380,10 +385,15 @@ export default function Home() {
       : `Hello, I would like to book a demo for QLINIC SYSTEM\n\nName: ${bookingData.name}\nEmail: ${bookingData.email}\nPhone: ${bookingData.phone}\nPreferred Date: ${bookingData.date}\nPreferred Time: ${bookingData.time}`;
     
     const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, "_blank");
+    fetch(whatsappUrl, { method: 'GET' }).catch(() => {});
     
-    setIsBookingModalOpen(false);
+    setBookingSuccess(true);
     setBookingData({ name: "", email: "", phone: "", date: "", time: "" });
+    
+    setTimeout(() => {
+      setIsBookingModalOpen(false);
+      setBookingSuccess(false);
+    }, 3000);
   };
 
   const toggleLang = () => {
@@ -736,16 +746,34 @@ export default function Home() {
       {isBookingModalOpen && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl max-w-md w-full p-8 space-y-6">
-            <div>
-              <h3 className="text-2xl font-black text-[#1E3A5F]">
-                {content.booking_modal_title}
-              </h3>
-              <p className="text-[#64748B] text-sm mt-2">
-                {content.booking_modal_subtitle}
-              </p>
-            </div>
+            {bookingSuccess ? (
+              <div className="text-center py-8">
+                <div className="mb-4 flex justify-center">
+                  <div className="w-16 h-16 bg-[#10B981] rounded-full flex items-center justify-center">
+                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                </div>
+                <h3 className="text-2xl font-black text-[#1E3A5F] mb-2">
+                  {content.booking_success_title}
+                </h3>
+                <p className="text-[#64748B] text-sm">
+                  {content.booking_success_message}
+                </p>
+              </div>
+            ) : (
+              <>
+                <div>
+                  <h3 className="text-2xl font-black text-[#1E3A5F]">
+                    {content.booking_modal_title}
+                  </h3>
+                  <p className="text-[#64748B] text-sm mt-2">
+                    {content.booking_modal_subtitle}
+                  </p>
+                </div>
 
-            <form onSubmit={handleBookingSubmit} className="space-y-4">
+                <form onSubmit={handleBookingSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-bold text-[#1E3A5F] mb-2">
                   {content.booking_form_name}
@@ -830,6 +858,8 @@ export default function Home() {
                 </button>
               </div>
             </form>
+              </>
+            )}
           </div>
         </div>
       )}
