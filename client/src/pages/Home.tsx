@@ -511,29 +511,47 @@ export default function Home() {
             {/* Right - Floating Cards */}
             <div className="relative h-96 hidden md:block order-1 md:order-2">
               {/* Card 1 */}
-              <div className="absolute top-0 left-0 w-72 bg-white rounded-2xl shadow-2xl p-6 border border-[#E2E8F0] animate-float backdrop-blur-sm"
+              <div className="absolute top-0 left-0 w-72 bg-gradient-to-br from-white to-[#F8FAFC] rounded-3xl shadow-2xl p-8 border border-[#E2E8F0] animate-float backdrop-blur-sm hover:shadow-3xl transition-all group overflow-hidden"
                 style={{ animationDelay: "0s" }}>
-                <div className="text-sm text-[#64748B] font-medium">{content.hero_card_1_title}</div>
-                <div className="text-3xl font-black text-[#1E3A5F] mt-3">
-                  {content.hero_card_1_value}
+                <div className="absolute inset-0 bg-gradient-to-br from-[#10B981]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-3xl"></div>
+                <div className="relative z-10">
+                  <div className="w-12 h-12 bg-gradient-to-br from-[#1E3A5F] to-[#0F1F3C] rounded-2xl flex items-center justify-center mb-4 group-hover:shadow-lg transition-shadow">
+                    <span className="text-white font-black text-lg">📊</span>
+                  </div>
+                  <div className="text-xs text-[#64748B] font-semibold uppercase tracking-wider">{content.hero_card_1_title}</div>
+                  <div className="text-4xl font-black text-[#1E3A5F] mt-4 group-hover:text-[#10B981] transition-colors">
+                    {content.hero_card_1_value}
+                  </div>
                 </div>
               </div>
 
               {/* Card 2 */}
-              <div className="absolute top-32 left-20 w-72 bg-white rounded-2xl shadow-2xl p-6 border border-[#E2E8F0] animate-float backdrop-blur-sm"
+              <div className="absolute top-32 left-20 w-72 bg-gradient-to-br from-white to-[#F8FAFC] rounded-3xl shadow-2xl p-8 border border-[#E2E8F0] animate-float backdrop-blur-sm hover:shadow-3xl transition-all group overflow-hidden"
                 style={{ animationDelay: "0.5s" }}>
-                <div className="text-sm text-[#64748B] font-medium">{content.hero_card_2_title}</div>
-                <div className="text-3xl font-black text-[#10B981] mt-3">
-                  {content.hero_card_2_value}
+                <div className="absolute inset-0 bg-gradient-to-br from-[#10B981]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-3xl"></div>
+                <div className="relative z-10">
+                  <div className="w-12 h-12 bg-gradient-to-br from-[#10B981] to-[#059669] rounded-2xl flex items-center justify-center mb-4 group-hover:shadow-lg transition-shadow">
+                    <span className="text-white font-black text-lg">💰</span>
+                  </div>
+                  <div className="text-xs text-[#64748B] font-semibold uppercase tracking-wider">{content.hero_card_2_title}</div>
+                  <div className="text-4xl font-black text-[#10B981] mt-4 group-hover:text-[#059669] transition-colors">
+                    {content.hero_card_2_value}
+                  </div>
                 </div>
               </div>
 
               {/* Card 3 */}
-              <div className="absolute top-64 left-0 w-72 bg-white rounded-2xl shadow-2xl p-6 border border-[#E2E8F0] animate-float backdrop-blur-sm"
+              <div className="absolute top-64 left-0 w-72 bg-gradient-to-br from-white to-[#F8FAFC] rounded-3xl shadow-2xl p-8 border border-[#E2E8F0] animate-float backdrop-blur-sm hover:shadow-3xl transition-all group overflow-hidden"
                 style={{ animationDelay: "1s" }}>
-                <div className="text-sm text-[#64748B] font-medium">{content.hero_card_3_title}</div>
-                <div className="text-3xl font-black text-[#10B981] mt-3">
-                  {content.hero_card_3_value}
+                <div className="absolute inset-0 bg-gradient-to-br from-[#10B981]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-3xl"></div>
+                <div className="relative z-10">
+                  <div className="w-12 h-12 bg-gradient-to-br from-[#10B981] to-[#059669] rounded-2xl flex items-center justify-center mb-4 group-hover:shadow-lg transition-shadow">
+                    <span className="text-white font-black text-lg">✓</span>
+                  </div>
+                  <div className="text-xs text-[#64748B] font-semibold uppercase tracking-wider">{content.hero_card_3_title}</div>
+                  <div className="text-4xl font-black text-[#10B981] mt-4 group-hover:text-[#059669] transition-colors">
+                    {content.hero_card_3_value}
+                  </div>
                 </div>
               </div>
             </div>
@@ -552,20 +570,25 @@ export default function Home() {
             {content.problems.map((item, idx) => (
               <div
                 key={idx}
-                className={`grid md:grid-cols-2 gap-8 p-8 rounded-2xl transition-all hover:shadow-xl ${
-                  idx % 2 === 0 ? "bg-[#2A4A7C]" : "bg-[#253D6B]"
+                className={`grid md:grid-cols-2 gap-8 p-8 rounded-3xl transition-all duration-300 hover:shadow-2xl group overflow-hidden ${
+                  idx % 2 === 0 ? "bg-gradient-to-br from-[#2A4A7C] to-[#1F3A5F]" : "bg-gradient-to-br from-[#253D6B] to-[#1A2E4A]"
                 }`}
               >
-                <div className="flex gap-4">
-                  <div className="text-3xl flex-shrink-0 font-black">✕</div>
+                <div className="absolute inset-0 bg-gradient-to-r from-[#10B981]/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="relative z-10 flex gap-4">
+                  <div className="w-12 h-12 bg-red-500/20 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:bg-red-500/30 transition-all duration-300">
+                    <span className="text-2xl font-black text-red-400">✕</span>
+                  </div>
                   <div>
-                    <p className="font-bold text-lg">{item.problem}</p>
+                    <p className="font-bold text-lg text-white group-hover:text-red-200 transition-colors duration-300">{item.problem}</p>
                   </div>
                 </div>
-                <div className="flex gap-4">
-                  <div className="text-3xl flex-shrink-0 font-black">✓</div>
+                <div className="relative z-10 flex gap-4">
+                  <div className="w-12 h-12 bg-[#10B981]/30 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:bg-[#10B981]/50 transition-all duration-300">
+                    <span className="text-2xl font-black text-[#10B981]">✓</span>
+                  </div>
                   <div>
-                    <p className="font-bold text-lg text-[#10B981]">{item.solution}</p>
+                    <p className="font-bold text-lg text-[#10B981] group-hover:text-[#5EEE9A] transition-colors duration-300">{item.solution}</p>
                   </div>
                 </div>
               </div>
@@ -588,15 +611,28 @@ export default function Home() {
             {content.features.map((feature, idx) => (
               <div
                 key={idx}
-                className="p-8 border-2 border-[#E2E8F0] rounded-2xl hover:shadow-2xl hover:border-[#10B981] transition-all bg-gradient-to-br from-[#F8FAFC] to-white group"
+                className="relative p-8 rounded-3xl transition-all duration-300 group overflow-hidden bg-white border border-[#E2E8F0] hover:border-[#10B981] hover:shadow-2xl"
               >
-                <div className="w-14 h-14 bg-gradient-to-br from-[#10B981] to-[#059669] rounded-xl flex items-center justify-center mb-4 group-hover:shadow-lg transition-shadow">
-                  <span className="text-white font-black text-lg">{idx + 1}</span>
+                {/* Gradient background on hover */}
+                <div className="absolute inset-0 bg-gradient-to-br from-[#10B981]/5 via-transparent to-[#1E3A5F]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-3xl"></div>
+                
+                {/* Animated border */}
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-[#10B981] to-[#1E3A5F] opacity-0 group-hover:opacity-10 transition-opacity duration-300 pointer-events-none"></div>
+                
+                <div className="relative z-10">
+                  <div className="w-16 h-16 bg-gradient-to-br from-[#10B981] via-[#059669] to-[#047857] rounded-2xl flex items-center justify-center mb-6 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 shadow-lg">
+                    <span className="text-white font-black text-2xl">{idx + 1}</span>
+                  </div>
+                  <h3 className="text-lg font-black text-[#1E3A5F] mb-3 group-hover:text-[#10B981] transition-colors duration-300">
+                    {feature.title}
+                  </h3>
+                  <p className="text-[#64748B] leading-relaxed text-sm group-hover:text-[#475569] transition-colors duration-300">{feature.description}</p>
+                  
+                  {/* Decorative element */}
+                  <div className="mt-6 pt-4 border-t border-[#E2E8F0] group-hover:border-[#10B981]/30 transition-colors duration-300">
+                    <div className="w-8 h-1 bg-gradient-to-r from-[#10B981] to-transparent rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </div>
                 </div>
-                <h3 className="text-lg font-bold text-[#1E3A5F] mb-3">
-                  {feature.title}
-                </h3>
-                <p className="text-[#64748B] leading-relaxed">{feature.description}</p>
               </div>
             ))}
           </div>
@@ -614,17 +650,28 @@ export default function Home() {
             {content.why_cards.map((card, idx) => (
               <div
                 key={idx}
-                className="p-8 bg-white rounded-2xl border-l-4 border-[#10B981] shadow-lg hover:shadow-2xl transition-all group"
+                className="relative p-8 bg-gradient-to-br from-white via-[#F8FAFC] to-white rounded-3xl border border-[#E2E8F0] shadow-lg hover:shadow-2xl transition-all duration-300 group overflow-hidden hover:border-[#10B981]"
               >
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-[#10B981]/20 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-[#10B981]/30 transition-colors">
-                    <span className="text-[#10B981] font-black">✓</span>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-[#1E3A5F] mb-2">
+                {/* Animated gradient background */}
+                <div className="absolute inset-0 bg-gradient-to-br from-[#10B981]/10 via-transparent to-[#1E3A5F]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-3xl"></div>
+                
+                {/* Left accent bar */}
+                <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[#10B981] to-[#059669] group-hover:w-1.5 transition-all duration-300 rounded-full"></div>
+                
+                <div className="relative z-10 pl-2">
+                  <div className="flex items-start gap-4 mb-4">
+                    <div className="w-14 h-14 bg-gradient-to-br from-[#10B981] to-[#059669] rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:shadow-lg group-hover:scale-110 transition-all duration-300 shadow-md">
+                      <span className="text-white font-black text-xl">✓</span>
+                    </div>
+                    <h3 className="text-xl font-black text-[#1E3A5F] group-hover:text-[#10B981] transition-colors duration-300 leading-tight">
                       {card.title}
                     </h3>
-                    <p className="text-[#64748B] leading-relaxed">{card.description}</p>
+                  </div>
+                  <p className="text-[#64748B] leading-relaxed group-hover:text-[#475569] transition-colors duration-300">{card.description}</p>
+                  
+                  {/* Bottom accent */}
+                  <div className="mt-6 pt-4 border-t border-[#E2E8F0] group-hover:border-[#10B981]/20 transition-colors duration-300">
+                    <div className="h-1 w-12 bg-gradient-to-r from-[#10B981] to-transparent rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
                 </div>
               </div>
