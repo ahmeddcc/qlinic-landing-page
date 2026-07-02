@@ -10,6 +10,15 @@ const CONTENT = {
     nav_faq: "الأسئلة الشائعة",
     nav_contact: "تواصل معنا",
     nav_cta: "احجز عرضاً توضيحياً",
+    booking_modal_title: "احجز عرضاً توضيحياً",
+    booking_modal_subtitle: "سيتصل بك فريقنا للتأكيد",
+    booking_form_name: "الاسم",
+    booking_form_email: "البريد الإلكتروني",
+    booking_form_phone: "رقم الهاتف",
+    booking_form_date: "التاريخ المفضل",
+    booking_form_time: "الوقت المفضل",
+    booking_form_submit: "تأكيد الحجز",
+    booking_form_cancel: "إلغاء",
     nav_lang_toggle: "EN",
 
     // Hero
@@ -18,6 +27,7 @@ const CONTENT = {
       "QLINIC SYSTEM نظام إدارة عيادة الأسنان الفردية الذي يتولى المهام المتكررة عنك — ويُبقيك دائماً في السيطرة الكاملة.",
     hero_btn_features: "شاهد المميزات",
     hero_btn_contact: "تواصل معنا",
+    hero_btn_booking: "احجز عرضاً توضيحياً",
     hero_card_1_title: "مرضى اليوم",
     hero_card_1_value: "12 مريض",
     hero_card_2_title: "إيرادات هذا الشهر",
@@ -159,7 +169,6 @@ const CONTENT = {
     // Final CTA
     final_cta_title: "جاهز لتحويل عيادتك رقمياً؟",
     final_cta_subtitle: "يعمل من المتصفح. لا تثبيت. لا تعقيد.",
-    final_cta_btn: "تواصل معنا الآن ←",
 
     // Footer
     footer_copyright: "© 2024 QLINIC SYSTEM - احدى تطبيقات Noor App. جميع الحقوق محفوظة.",
@@ -322,6 +331,15 @@ const CONTENT = {
     final_cta_title: "Ready to Take Your Clinic Digital?",
     final_cta_subtitle: "Browser-based. No installation. No complexity.",
     final_cta_btn: "Get in Touch →",
+    booking_modal_title: "Book a Demo",
+    booking_modal_subtitle: "Our team will contact you to confirm",
+    booking_form_name: "Name",
+    booking_form_email: "Email",
+    booking_form_phone: "Phone",
+    booking_form_date: "Preferred Date",
+    booking_form_time: "Preferred Time",
+    booking_form_submit: "Confirm Booking",
+    booking_form_cancel: "Cancel",
 
     // Footer
     footer_copyright: "© 2024 QLINIC SYSTEM - A Noor App Application. All rights reserved.",
@@ -336,6 +354,14 @@ export default function Home() {
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [bookingData, setBookingData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    date: "",
+    time: "",
+  });
 
   const content = CONTENT[currentLang];
 
@@ -346,6 +372,19 @@ export default function Home() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const handleBookingSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const message = currentLang === "ar" 
+      ? `مرحباً، أود حجز عرض توضيحي لـ QLINIC SYSTEM\n\nالاسم: ${bookingData.name}\nالبريد الإلكتروني: ${bookingData.email}\nرقم الهاتف: ${bookingData.phone}\nالتاريخ المفضل: ${bookingData.date}\nالوقت المفضل: ${bookingData.time}`
+      : `Hello, I would like to book a demo for QLINIC SYSTEM\n\nName: ${bookingData.name}\nEmail: ${bookingData.email}\nPhone: ${bookingData.phone}\nPreferred Date: ${bookingData.date}\nPreferred Time: ${bookingData.time}`;
+    
+    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, "_blank");
+    
+    setIsBookingModalOpen(false);
+    setBookingData({ name: "", email: "", phone: "", date: "", time: "" });
+  };
 
   const toggleLang = () => {
     const newLang = currentLang === "ar" ? "en" : "ar";
@@ -677,11 +716,11 @@ export default function Home() {
           </h2>
           <p className="text-lg text-white/90 mb-8">{content.final_cta_subtitle}</p>
           <button
-            onClick={openWhatsApp}
+            onClick={() => setIsBookingModalOpen(true)}
             className="px-8 py-4 bg-white text-[#10B981] rounded-lg font-black text-lg hover:bg-[#F0FDF4] transition-all transform hover:scale-105 shadow-xl flex items-center justify-center gap-2 mx-auto"
           >
             <MessageCircle size={20} />
-            {content.final_cta_btn}
+            {content.nav_cta}
           </button>
         </div>
       </section>
@@ -692,6 +731,108 @@ export default function Home() {
           <p className="text-sm text-white/70">{content.footer_copyright}</p>
         </div>
       </footer>
+
+      {/* Booking Modal */}
+      {isBookingModalOpen && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-8 space-y-6">
+            <div>
+              <h3 className="text-2xl font-black text-[#1E3A5F]">
+                {content.booking_modal_title}
+              </h3>
+              <p className="text-[#64748B] text-sm mt-2">
+                {content.booking_modal_subtitle}
+              </p>
+            </div>
+
+            <form onSubmit={handleBookingSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-bold text-[#1E3A5F] mb-2">
+                  {content.booking_form_name}
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={bookingData.name}
+                  onChange={(e) => setBookingData({ ...bookingData, name: e.target.value })}
+                  className="w-full px-4 py-3 border border-[#E2E8F0] rounded-lg focus:outline-none focus:border-[#10B981]"
+                  placeholder={currentLang === "ar" ? "أحمد محمد" : "John Doe"}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-[#1E3A5F] mb-2">
+                  {content.booking_form_email}
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={bookingData.email}
+                  onChange={(e) => setBookingData({ ...bookingData, email: e.target.value })}
+                  className="w-full px-4 py-3 border border-[#E2E8F0] rounded-lg focus:outline-none focus:border-[#10B981]"
+                  placeholder="example@email.com"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-[#1E3A5F] mb-2">
+                  {content.booking_form_phone}
+                </label>
+                <input
+                  type="tel"
+                  required
+                  value={bookingData.phone}
+                  onChange={(e) => setBookingData({ ...bookingData, phone: e.target.value })}
+                  className="w-full px-4 py-3 border border-[#E2E8F0] rounded-lg focus:outline-none focus:border-[#10B981]"
+                  placeholder="01012345678"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-[#1E3A5F] mb-2">
+                  {content.booking_form_date}
+                </label>
+                <input
+                  type="date"
+                  required
+                  value={bookingData.date}
+                  onChange={(e) => setBookingData({ ...bookingData, date: e.target.value })}
+                  className="w-full px-4 py-3 border border-[#E2E8F0] rounded-lg focus:outline-none focus:border-[#10B981]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-[#1E3A5F] mb-2">
+                  {content.booking_form_time}
+                </label>
+                <input
+                  type="time"
+                  required
+                  value={bookingData.time}
+                  onChange={(e) => setBookingData({ ...bookingData, time: e.target.value })}
+                  className="w-full px-4 py-3 border border-[#E2E8F0] rounded-lg focus:outline-none focus:border-[#10B981]"
+                />
+              </div>
+
+              <div className="flex gap-3 pt-4">
+                <button
+                  type="submit"
+                  className="flex-1 px-6 py-3 bg-[#10B981] text-white rounded-lg hover:bg-[#059669] transition-colors font-bold"
+                >
+                  {content.booking_form_submit}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsBookingModalOpen(false)}
+                  className="flex-1 px-6 py-3 border border-[#E2E8F0] text-[#1E3A5F] rounded-lg hover:bg-[#F8FAFC] transition-colors font-bold"
+                >
+                  {content.booking_form_cancel}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* Floating WhatsApp Button */}
       <button
