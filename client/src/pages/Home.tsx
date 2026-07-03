@@ -385,12 +385,14 @@ export default function Home() {
   }, []);
 
   const sendBookingMutation = trpc.booking.sendMessage.useMutation();
+  const isSubmitting = sendBookingMutation.isPending;
 
   const handleBookingSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
     
     try {
-      const result = await sendBookingMutation.mutateAsync({
+      await sendBookingMutation.mutateAsync({
         name: bookingData.name,
         email: bookingData.email,
         phone: bookingData.phone,
@@ -399,14 +401,13 @@ export default function Home() {
         language: currentLang,
       });
       
-      // Message sent silently from backend
       setBookingSuccess(true);
       setBookingData({ name: "", email: "", phone: "", date: "", time: "" });
       
       setTimeout(() => {
         setIsBookingModalOpen(false);
         setBookingSuccess(false);
-      }, 3000);
+      }, 2000);
     } catch (error) {
       console.error("Error sending booking:", error);
       setBookingSuccess(false);
@@ -893,14 +894,22 @@ export default function Home() {
               <div className="flex gap-3 pt-4">
                 <button
                   type="submit"
-                  className="flex-1 px-6 py-3 bg-[#10B981] text-white rounded-lg hover:bg-[#059669] transition-colors font-bold"
+                  disabled={isSubmitting}
+                  className={isSubmitting ? "flex-1 px-6 py-3 bg-[#94D82D] text-white rounded-lg font-bold cursor-not-allowed opacity-75 flex items-center justify-center gap-2" : "flex-1 px-6 py-3 bg-[#10B981] text-white rounded-lg hover:bg-[#059669] transition-colors font-bold flex items-center justify-center gap-2"}
                 >
-                  {content.booking_form_submit}
+                  {isSubmitting && (
+                    <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                  )}
+                  {isSubmitting ? (currentLang === 'ar' ? 'جاري الإرسال...' : 'Sending...') : content.booking_form_submit}
                 </button>
                 <button
                   type="button"
                   onClick={() => setIsBookingModalOpen(false)}
-                  className="flex-1 px-6 py-3 border border-[#E2E8F0] text-[#1E3A5F] rounded-lg hover:bg-[#F8FAFC] transition-colors font-bold"
+                  disabled={isSubmitting}
+                  className="flex-1 px-6 py-3 border border-[#E2E8F0] text-[#1E3A5F] rounded-lg hover:bg-[#F8FAFC] transition-colors font-bold disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {content.booking_form_cancel}
                 </button>
